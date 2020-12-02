@@ -39,7 +39,7 @@
 
 
 .header-middle {
-    float: middle;
+    float: right;
 }
 
 @media screen and (max-width: 500px) {
@@ -58,4 +58,10 @@
     float: left;
     width: 30px;
     height: 30px;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
