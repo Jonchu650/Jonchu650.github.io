@@ -1,3 +1,10 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
 .header {
     overflow: hidden;
     background-color: black;
@@ -28,4 +35,27 @@
 .header a.active {
     background-color: #00aacc;
     color: black;
+}
+
+
+.header-middle {
+    float: middle;
+}
+
+@media screen and (max-width: 500px) {
+    .header a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+
+    .header-middle {
+        float: none;
+    }
+}
+
+.header-logo {
+    float: left;
+    width: 30px;
+    height: 30px;
 }
