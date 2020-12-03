@@ -7,7 +7,7 @@
 
 .section-1 {
     height: 500px;
-    background-image: url(../../../Downloads//anime\ girl\ pfp.jpg);
+    background-image: url(images/codecode.jpg);
     background-attachment: fixed;
     background-size: cover;
 }
@@ -80,6 +80,11 @@
     float: left;
     width: 30px;
     height: 30px;
+}
+
+.large-logo{
+    width: 200px;
+    height: 200px;
 }
 
 .sticky {
