@@ -21,6 +21,14 @@
     text-align: center;
 }
 
+.box h1 {
+    font-size: 100px;
+    padding-top: 75px;
+}
+
+.content h1 {
+    font-size: 50px;
+}
 
 .header {
     overflow: hidden;
@@ -82,13 +90,21 @@
     height: 30px;
 }
 
-.large-logo{
+.large-logo {
     width: 200px;
     height: 200px;
+}
+
+.content {
+    padding: 16px;
 }
 
 .sticky {
     position: fixed;
     top: 0;
     width: 100%;
+}
+
+.sticky+.content {
+    padding-top: 102px;
 }
