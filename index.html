@@ -35,6 +35,59 @@
     <p>Hello, My name is Jonchu, I am a bot developer. I made this website because... Idk i was bored, I code things... and umm idk ;-;</p>
   </div>
 
+<div class="cookie">
+  <p>Code is from <a href="https://github.com/zombienw/zombienw.github.io">ZombieNW</a> so thanks to him </p>
+  
+		<center>
+			<h1>Cookie Clicker</h1>
+			<a href="#" onclick="myFunction()">
+				<img src="https://cdn.pixabay.com/photo/2014/04/02/10/52/chocolate-chip-				cookies-304801__340.png" width="10%"></img>
+			</a> 
+			<br>
+			<button onclick="buyClickOne()">Buy Auto Clicker (50 Clicks)</button>
+			<button onclick="buyClickTwo()">Buy Grandma (100 Clicks)</button>
+			<p id="cookies">0</p>
+      		<p> Cookies</p>
+      		<br>
+      		<p id="clickers">0</p>
+      		<p>Clickers</p>
+      		<p id="grandmas">0</p>
+      		<p>Grandmas</p>
+		</center>
+		<script>
+			var clicks = 0;
+			var clickers = 0;
+            var grammas = 0;
+			function myFunction() {
+              clicks += 1;
+              document.getElementById("cookies").innerHTML = clicks;
+            }
+            function buyClickOne() {
+              if(clicks > 49){
+                 clicks -= 50;
+                 clickers += 1;
+                 setInterval(function(){ 
+                    clicks += 1; 
+                    document.getElementById("cookies").innerHTML = clicks; 
+                 }, 5000);
+                 document.getElementById("cookies").innerHTML = clicks;
+                 document.getElementById("clickers").innerHTML = clickers;
+              }
+            }
+          function buyClickTwo() {
+              if(clicks > 99){
+                 clicks -= 100;
+                 grammas += 1;
+                 setInterval(function(){ 
+                    clicks += 50; 
+                    document.getElementById("cookies").innerHTML = clicks; 
+                 }, 60000);
+                 document.getElementById("cookies").innerHTML = clicks;
+                 document.getElementById("grandmas").innerHTML = grammas;
+              }
+            }
+		</script>
+</div>
   <script>
     window.onscroll = function () { myFunction() };
 
