@@ -7,7 +7,7 @@
 
 .section-1 {
     height: 500px;
-    background-image: url(cdn/codecode.jpg);
+    background-image: url(https://cdn.jonchu.tk/codecode.jpg);
     background-attachment: fixed;
     background-size: cover;
 }
