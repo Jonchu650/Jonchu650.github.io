@@ -7,7 +7,7 @@
 
 .section-1 {
     height: 500px;
-    background-image: url(images/codecode.jpg);
+    background-image: url(cdn/codecode.jpg);
     background-attachment: fixed;
     background-size: cover;
 }
