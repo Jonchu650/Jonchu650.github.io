@@ -1,52 +1,33 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
-  <meta name="description" content="The epic website of Jonchu!">
-  <meta name="keywords" content="HTML, CSS, JavaScript">
-  <meta name="author" content="Jonchu">
-  <meta property="og:image" content="images/Jonchu.jpg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="BLUE">
-  <title>Jonchu</title>
-  <link rel="icon" href="images/Jonchu.jpg">
-  </link>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Jonathan's selected work: Hatch a Meteor, Cortana, a Roblox Discord bot, and this portfolio.">
+  <meta name="theme-color" content="#111310">
+  <title>Jonathan — Selected work</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e44027'/%3E%3Ctext x='9' y='24' fill='white' font-family='Arial' font-size='24'%3Ej%3C/text%3E%3C/svg%3E">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("portfolio-theme")||"dark"}catch(e){}</script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="project-worlds.css">
+  <link rel="stylesheet" href="featured.css">
 </head>
-
-<body>
-  <div class="header" id="myHeader">
-    <a href="" class="logo"><img src="images/Jonchu.jpg" class="header-Logo"> Jonchu</a>
-    <div class="header-middle">
-      <a class="active" href="#home">Home</a>
-      <a href="overlord/index.html">Overlord</a>
-    </div>
-  </div>
- 
-  <div class="section-1 box">
-    <h1>Jonchu</h2>
-    <img src="images/Jonchu.jpg" class="large-logo"></img>
-  </div>
-
-  <div class="content">
-    <h1>About Me</h1>
-    <p>Hello, My name is Jonchu, I am a bot developer. I made this website because... Idk i was bored, I code things... and umm idk ;-;</p>
-  </div>
-  <script>
-    window.onscroll = function () { myFunction() };
-
-    var header = document.getElementById("myHeader");
-    var sticky = header.offsetTop;
-
-    function myFunction() {
-      if (window.pageYOffset > sticky) {
-        header.classList.add("sticky");
-      } else {
-        header.classList.remove("sticky");
-      }
-    }
-  </script>
+<body id="top">
+<a class="skip" href="#work">Skip to selected work</a>
+<div class="page">
+  <header><a class="wordmark" href="#top" aria-label="Jonathan, back to top">j<span>.</span></a><span class="header-caption">Independent projects<br>Games, tools & experiments</span><nav aria-label="Main navigation"><a href="#work">Work <span>04</span></a><a href="#about">About</a><button class="theme-toggle" type="button" aria-label="Switch to light mode"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Light</span></button></nav></header>
+  <main>
+    <section class="intro" aria-labelledby="intro-title"><div class="intro-meta"><span>Portfolio / 2026</span><span>A work in progress, always.</span></div><h1 id="intro-title">Jonathan<span class="period">.</span></h1><div class="intro-bottom"><p>Personal AI, playful worlds,<br>and tools with a purpose.</p><a href="#cortana" class="text-link">Explore Cortana <span aria-hidden="true">↓</span></a></div></section>
+    <section id="work" aria-labelledby="work-title"><div class="section-label"><h2 id="work-title">Selected work</h2><span>01 — 04</span></div>
+      <details class="project" id="cortana" open><summary><span class="number">01</span><span class="project-thumbnail "><img src="assets/cortana-spheres.png" alt="" width="160" height="100" loading="lazy"></span><div class="project-heading"><h3>Cortana</h3><p>Memory, voice, and a team of AI companions.</p></div><span class="category">Featured project<br>AI companion</span><span class="toggle" aria-hidden="true"></span></summary><div class="project-world cortana-world"><div class="world-top"><span>CORTANA / WORLD</span><span>Memory has a presence.</span></div><div class="cortana-lead"><p class="eyebrow">Personal intelligence, built over time</p><h4>A companion that<br>remembers the context.</h4><p>From a passing thought to a useful insight.<br>From a conversation to something done.</p></div><div class="sphere-stage" id="sphere-stage" role="img" aria-label="Cortana's animated particle spheres, rendered with the project's original visual engine"><img class="sphere-fallback" src="assets/cortana-spheres.png" alt="Blue and violet Cortana particle spheres" width="1000" height="520" loading="lazy"><div id="sphere-canvas" aria-hidden="true"></div></div><div class="sphere-controls"><span id="sphere-caption" role="status" aria-live="polite">Cortana & companions</span><div><button type="button" id="sphere-focus">Change focus</button><button type="button" id="sphere-delegate">Show delegation</button><button type="button" id="sphere-pause" aria-pressed="false">Pause motion</button></div></div></div><div class="project-body"><div class="project-note"><span class="eyebrow">Designed for one person</span><p>A personal memory and reflection system that connects meaningful moments, conversations, and insights over time.</p><p class="secondary">Cortana brings together voice, a desktop app, persistent companions, and scheduled workflows. Its memory lives locally, with model APIs providing the intelligence.</p></div><div class="project-spec"><h4>Built as one connected system</h4><ul><li>Local memory, shared context</li><li>Desktop, voice & web</li><li>Agents, tools & scheduled work</li></ul><span class="project-footnote">Python · JavaScript · Tauri</span></div></div><section class="cortana-capabilities" aria-label="Cortana capabilities"><div class="capability-heading"><span class="eyebrow">What Cortana can do</span><p>One memory.<br>Many ways to work with it.</p></div><div class="capability-list"><article><span>01 / THE INDEX</span><h4>Remember what matters.</h4><p>Connect moments, people, insights, goals, and long-running life arcs. Browse and edit the memory that gives later conversations their context.</p></article><article><span>02 / VOICE & DESKTOP</span><h4>Talk, without changing context.</h4><p>A local voice listener with speaker recognition, a native macOS app, a global shortcut, and notifications. The same companion across surfaces.</p></article><article><span>03 / COMPANIONS</span><h4>Give the work a team.</h4><p>Persistent companions have their own tools, prompts, voices, and task queues. They can delegate to each other and file longer work into Knowledge.</p></article><article><span>04 / AUTOMATIONS</span><h4>Make useful work repeatable.</h4><p>Build scheduled workflows with AI steps, conditions, and delivery. Test a draft, publish a version, and review what happened in each run.</p></article><article><span>05 / KNOWLEDGE & INTEGRATIONS</span><h4>Keep the output somewhere useful.</h4><p>Organize documents and uploads in Knowledge. Connect external services with explicit capability grants and an audit trail.</p></article><article><span>06 / CODING TOOLS</span><h4>Move from an idea to a diff.</h4><p>Read and search approved projects, inspect Git changes, and dispatch coding agents into isolated worktrees. Review the diff before applying their work.</p></article></div><div class="workflow-example"><span class="eyebrow">Example workflow</span><ol><li><small>TRIGGER</small><strong>Weekly schedule</strong></li><li><small>REASON</small><strong>Review recent context</strong></li><li><small>DELIVER</small><strong>Save a summary</strong></li></ol><p>Personal memory stays in a local database. Model API calls provide the intelligence.</p></div></section></details>
+<details class="project" id="hatch"><summary><span class="number">02</span><span class="project-thumbnail "><img src="assets/hatch-icon.png" alt="" width="160" height="100" loading="lazy"></span><div class="project-heading"><h3>Hatch a Meteor<span class="bang">!</span></h3><p>Small worlds. Something waiting inside.</p></div><span class="category">Roblox game</span><span class="toggle" aria-hidden="true"></span></summary><div class="project-world hatch-world"><div class="world-top"><span>HATCH A METEOR!</span><span>Roblox experience</span></div><figure class="roblox-banner"><img src="assets/hatch-banner.png" alt="Hatch a Meteor banner: a glowing meteor reveals mysterious creatures above a group of Roblox players." width="768" height="432" loading="lazy"></figure><div class="roblox-brand"><img src="assets/hatch-icon.png" alt="Hatch a Meteor game icon showing a Roblox character escaping falling meteors." width="512" height="512" loading="lazy"><div><span class="eyebrow">Worlds, meteors & the unknown</span><p>What will you hatch?</p><a href="https://www.roblox.com/games/110808406182806" target="_blank" rel="noopener noreferrer">View on Roblox ↗</a></div></div></div><div class="project-body"><div class="project-note"><span class="eyebrow">A world to explore</span><p>A Roblox game built around meteors, collectible titans, and distinct worlds. From the plains to volcanic terrain, each zone has its own creatures and character.</p><p class="secondary">The work spans environment art, creature design, animation, and the interfaces that bring the game together.</p></div><div class="project-spec"><h4>Inside the project</h4><ul><li>Zone & environment design</li><li>Creature models & animation</li><li>Game systems & UI</li></ul><span class="project-footnote">Built in Roblox Studio</span></div></div></details>
+<details class="project" id="discord"><summary><span class="number">03</span><span class="project-thumbnail "><img src="assets/discord-preview.png" alt="" width="160" height="100" loading="lazy"></span><div class="project-heading"><h3>Discord bot</h3><p>Keeping up with what changes on Roblox.</p></div><span class="category">Community tool</span><span class="toggle" aria-hidden="true"></span></summary><div class="project-world discord-world"><div class="world-top"><span># roblox-updates</span><span>ROBLOX 20 TRACKER</span></div><figure class="discord-figure" tabindex="0" aria-label="Discord message preview"><img src="assets/discord-preview.png" alt="Illustrative Discord preview of the bot's blue-accented Roblox game lookup, with a playable status and tracking controls." width="1100" height="560" loading="lazy"><figcaption>Message preview · illustrative data, based on the bot’s embed styles</figcaption></figure><div class="command-strip"><code>/inspect</code><code>/badges</code><code>/watch</code><code>/status</code></div></div><div class="project-body"><div class="project-note"><span class="eyebrow">From games to a conversation</span><p>A Discord bot project for tracking Roblox games, badges, updates, and event information. It brings the details into the place where a community already talks.</p><p class="secondary">An exploration of how game data can become useful, timely information inside a server.</p></div><div class="project-spec"><h4>Inside the project</h4><ul><li>Roblox game discovery</li><li>Badge & update tracking</li><li>Discord integration</li></ul><span class="project-footnote">Roblox + Discord</span></div></div></details>
+<details class="project" id="portfolio"><summary><span class="number">04</span><span class="project-thumbnail "><img src="assets/portfolio-desktop.png" alt="" width="160" height="100" loading="lazy"></span><div class="project-heading"><h3>This website</h3><p>A home for the things I’m making.</p></div><span class="category">Design & web</span><span class="toggle" aria-hidden="true"></span></summary><div class="project-world portfolio-world"><div class="world-top"><span>JONATHAN / SELECTED WORK</span><span>Desktop & mobile</span></div><figure class="portfolio-figure"><div class="portfolio-screens"><img src="assets/portfolio-desktop.png" alt="Jonathan’s dark portfolio with Cortana featured first." width="812" height="725" loading="lazy"><img class="mobile-screen" src="assets/portfolio-mobile.png" alt="The portfolio adapted to a phone screen." width="390" height="844" loading="lazy"></div><figcaption>A simple index, designed to grow with the work.</figcaption></figure><div class="world-bottom"><span>TYPE · SPACE · DETAIL</span><span>2026</span></div></div><div class="project-body"><div class="project-note"><span class="eyebrow">You’re here</span><p>A small, deliberately simple portfolio. Four projects, a few notes, and space for the work to speak for itself.</p><p class="secondary">Built with semantic HTML and CSS, native keyboard-accessible project disclosures, and a dark-first layout that gives each project its own space.</p></div><div class="project-spec"><h4>Inside the project</h4><ul><li>Art direction & typography</li><li>Responsive layout</li><li>Accessible interactions</li></ul><span class="project-footnote">HTML · CSS · JavaScript</span></div></div></details>
+    </section>
+    <section id="about" class="about" aria-labelledby="about-title"><h2 class="eyebrow" id="about-title">A little context</h2><div><p>I’m Jonathan. I like building across the edges of games, AI, and the tools we use every day.</p><p class="secondary">These projects are different ways of following the same curiosity: what can I make that I’d want to spend time with?</p></div><span class="about-mark" aria-hidden="true">j.</span></section>
+    <section id="contact" class="contact" aria-labelledby="contact-title"><h2 class="eyebrow" id="contact-title">Get in touch</h2><div><p>Have something in mind?</p><a class="contact-email" href="mailto:jonathan@jonchu.xyz">jonathan@jonchu.xyz <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer><span>Jonathan © 2026</span><span>Made to be explored.</span><a href="#top">Back to top ↑</a></footer>
+</div>
+<script src="site.js"></script>
 </body>
-
 </html>
