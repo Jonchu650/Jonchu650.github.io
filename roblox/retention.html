@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retention &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="D1, D7 and D30 retention on Roblox: how cohorts are measured, what the real benchmark numbers are, and the distinct design system behind each one.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Retention</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html" aria-current="page"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 04 &nbsp;&middot;&nbsp; Metrics</p><h1>Retention</h1><p class="standfirst">The metric family Roblox says to fix before anything else, and the one its recommendation system is explicitly being steered toward. Each of D1, D7 and D30 fails for a different reason and is fixed by a different system.</p></header>
+
+<h2><span class="sec">01</span>The three horizons</h2>
+
+<p>Roblox maps each retention window to a specific part of your game. This mapping is the most useful
+diagnostic shortcut in the whole dashboard: <strong>which number is low tells you which system is
+broken.</strong></p>
+
+<div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition</th><th>A low number means</th><th>Fix</th></tr></thead><tbody><tr><td><strong>D1 retention</strong></td><td>Percentage of new users who return after their first session ends</td><td>The first session was confusing, frustrating, or did not reach the fun</td><td>Core loop &amp; first-time user experience</td></tr><tr><td><strong>D7 retention</strong></td><td>Percentage of new users who return on the 8th day</td><td>No tangible reason to imagine still playing a week out</td><td>Progression system</td></tr><tr><td><strong>D30 retention</strong></td><td>Percentage of new users who return on the 31st day</td><td>Nothing to do after the main objectives are complete</td><td>Endgame &amp; social systems</td></tr></tbody><caption>Roblox's own framing. Note that all three are measured against the same cohort — users who first played on a given date — so a single bad acquisition day shows up as a simultaneous dip on all three charts.</caption></table></div>
+
+<div class="note key"><span class="tag">Read the x-axis correctly</span><p>The x-axis on all three retention charts is the cohort's <strong>first play date</strong>, not the return date. The point at 06/20 on the D7 chart means &ldquo;users who first played on 06/20 and came back a week later.&rdquo; That data does not appear until 06/27. Your D7 and D30 charts will always have empty tails &mdash; that is the design, not a bug.</p><p>The practical benefit: a change you ship on a given day lines up vertically across all three charts, so you can see its full downstream effect on one date.</p></div>
+
+<h2><span class="sec">02</span>What the numbers actually are</h2>
+
+<p>There are three different sets of retention numbers circulating, they disagree wildly, and the reason
+is sampling. Here is all three, honestly labelled.</p>
+
+<figure><p class="chart-title">D1 retention &mdash; three views of the same metric</p><p class="chart-sub">Bar shows the stated range; dot shows the midpoint or median</p><div class="ranges"><div class="range-row"><div class="bl">Platform-wide</div><div class="range-track"><div class="range-bar" style="left:21.0%;width:34.5%"></div><div class="range-dot" style="left:25.8%"></div></div></div><div class="range-row"><div class="bl">Roblox benchmark</div><div class="range-track"><div class="range-bar" style="left:30.3%;width:16.6%"></div></div></div><div class="range-row"><div class="bl">Promoted games</div><div class="range-track"><div class="range-bar" style="left:45.0%;width:42.5%"></div><div class="range-dot" style="left:67.5%"></div></div></div></div><div class="range-row"><div class="bl"></div><div class="range-axis"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span></div></div><figcaption>Platform-wide: GameAnalytics 2026 Roblox Benchmark Report, p25–p99 with p50 marked. Roblox benchmark: the worked example in Roblox's own dashboard documentation, showing a 50th–90th percentile band of 12.11%–18.73% for similar games. Promoted games: BLOXG, 850+ promoted titles, March 2026, range across genres. The three disagree because they sample different populations.</figcaption></figure>
+
+<div class="note trap"><span class="tag">Which number should you actually use</span><p><strong>Your own dashboard's similar-games benchmark, and nothing else.</strong> It is computed daily against games enjoyed by players similar to yours, which is the only comparison that controls for genre, audience age and region at once.</p><p>Use the platform-wide percentiles for a reality check when someone tells you a 30% D1 is &lsquo;normal&rsquo;. Across the whole platform, the <em>99th percentile</em> is around 22%. Numbers above that come from samples of already-successful, already-promoted games. Holding yourself to them before launch is a good way to conclude a healthy game is failing.</p></div>
+
+<figure><p class="chart-title">D7 retention, platform-wide percentiles</p><p class="chart-sub">GameAnalytics 2026, 500+ Roblox titles</p><div class="bars"><div class="bar-row"><div class="bl">p25</div><div class="bar-track"><div class="bar-fill c3" style="width:10.0%"></div></div><div class="bar-val">1.0%</div></div><div class="bar-row"><div class="bl">p50</div><div class="bar-track"><div class="bar-fill c3" style="width:16.0%"></div></div><div class="bar-val">1.6%</div></div><div class="bar-row"><div class="bl">p75</div><div class="bar-track"><div class="bar-fill c3" style="width:23.0%"></div></div><div class="bar-val">2.3%</div></div><div class="bar-row"><div class="bl">p90</div><div class="bar-track"><div class="bar-fill c3" style="width:42.0%"></div></div><div class="bar-val">4.2%</div></div><div class="bar-row"><div class="bl">p95</div><div class="bar-track"><div class="bar-fill c3" style="width:68.0%"></div></div><div class="bar-val">6.8%</div></div><div class="bar-row"><div class="bl">p99</div><div class="bar-track"><div class="bar-fill c3" style="width:91.0%"></div></div><div class="bar-val">9.1%</div></div></div><figcaption>The drop from D1 to D7 is brutal at every percentile — roughly a sixfold decay at the median. This is why Roblox treats D7 as a separate design problem rather than a weaker version of D1.</figcaption></figure>
+
+<h2><span class="sec">03</span>Fixing D1: the core loop and the first session</h2>
+
+<div class="placard"><div class="placard-top"><h3>Core loop</h3><div><span class="chip rank">Fix first</span></div></div><p class="def">The actions players repeat to make progress within a single session.</p><dl><dt>Examples</dt><dd>Adopt &rarr; train &rarr; level up a pet. Manage &rarr; balance &rarr; compete in a tycoon</dd><dt>Step 1</dt><dd>Identify the core steps and make each one clear and fun on its own</dd><dt>Step 2</dt><dd>Balance the challenge &mdash; avoid both frustration and boredom</dd><dt>Step 3</dt><dd>Reward loop completion with feedback, currency, items and achievements</dd></dl></div>
+
+<h3>First-time user experience</h3>
+<ul class="checklist"><li><strong>Brief tutorial or contextual tooltips</strong> to guide players through the core loop. Roblox is explicit: avoid long tutorials, get to the fun fast.</li><li><strong>A joyful moment</strong> the first time a player completes the loop &mdash; the payoff has to land, not just resolve.</li><li><strong>Preview the progress</strong> available if they complete the loop repeatedly. Show the ladder, not just the first rung.</li><li><strong>Under five minutes</strong> from join to fun. Roblox states this as a target, not an aspiration.</li></ul>
+
+<h3>Instrument it, then fix what the data says</h3>
+<p>Roblox's recommended method, which is also the cheapest analytics work you will ever do:</p>
+<ol>
+<li><strong>List the steps of your core loop.</strong> For a pet game: adopt a pet, train a pet, level up a pet.</li>
+<li><strong>Track the completion rate of each step</strong> as an onboarding funnel. Track negative outcomes
+too &mdash; if there is an NPC battle, log both wins and losses.</li>
+<li><strong>Find the biggest drop-off and reduce its friction.</strong> In Roblox's own worked example from
+the <em>Plant</em> reference project, the funnel showed a 70% drop between step 1 (&ldquo;In Farm&rdquo;) and
+step 2 (&ldquo;Plant Seed&rdquo;). The fix was contextual prompts above the flowerpots.</li>
+</ol>
+<p>See <a href="instrumentation.html">Instrumentation</a> for the code. An onboarding funnel takes about
+twenty minutes to add and is the highest-value analytics work available to a pre-launch game.</p>
+
+<h2><span class="sec">04</span>Fixing D7: the progression system</h2>
+
+<p>D7 is a question about whether a player can picture themselves still playing next week. That requires
+a visible ladder with rungs they have not reached.</p>
+
+<div class="cards"><div class="card"><p class="ct">Set goals at two ranges</p><p class="cd">Short-term goals give instant gratification and feedback. Long-term goals give direction over weeks. A game with only one kind stalls.</p></div><div class="card"><p class="ct">Add content variety</p><p class="cd">New modes, inventory items, social features. Variety is what prevents a good loop from becoming a boring one.</p></div><div class="card"><p class="ct">Balance the difficulty</p><p class="cd">Too fast and they exhaust your content. Too slow and they quit. This is the single most common cause of a weak D7.</p></div></div>
+
+<p><strong>How to measure it:</strong> track the number of players at each progression level by granting a
+special in-game item or firing a custom event on level-up. The distribution across levels tells you
+where players stall and where they sprint. If most of your week-one players are clustered at level 2,
+your level 2&rarr;3 gate is too expensive.</p>
+
+<h2><span class="sec">05</span>Fixing D30: the endgame</h2>
+
+<p>D30 asks what exists after the main objectives are done. Roblox names two answers.</p>
+
+<h4>More content, on a cadence</h4>
+<p>The published rhythm: <strong>smaller updates to existing mechanics every 2&ndash;4 weeks, and bigger
+feature updates every 2&ndash;3 months.</strong> This is the only concrete update-frequency guidance Roblox
+gives, and it is worth treating as a schedule rather than a suggestion &mdash; a predictable cadence is also
+what makes experience events and notifications work.</p>
+
+<h4>Social mechanics</h4>
+<p>Trading, parties, guilds, PvP, tournaments and leaderboards keep players engaged with each other while
+they wait for you to build. They also feed the <em>intentional co-play days</em> ranking signal, which makes
+them one of the few investments that pays into two tiers at once.</p>
+
+<h2><span class="sec">06</span>Cohort analysis</h2>
+
+<p>The cohort table at the bottom of the retention dashboard is the most under-used view on the Creator
+Hub. It shows daily cohorts across their first 10 days, or weekly cohorts across 10 weeks.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Down-funnel metric</th><th>What it answers</th></tr></thead><tbody><tr><td>7D playtime per user (cumulative)</td><td>Did this cohort engage more than previous ones</td></tr><tr><td>7D player conversion rate (cumulative)</td><td>Did this cohort start spending faster</td></tr><tr><td>7D revenue per user (cumulative)</td><td>Early monetization quality of the cohort</td></tr><tr><td>30D revenue per user (cumulative)</td><td>Full monetization value of the cohort</td></tr></tbody><caption>Use these to evaluate campaigns and events properly: did the players an event brought in actually stick and spend, or did they inflate DAU for a weekend and leave?</caption></table></div>
+
+<div class="note win"><span class="tag">The most useful thing cohorts tell you</span><p>A dip across all three retention charts on the same date usually means a large influx of new users that day &mdash; Roblox calls this out explicitly as a typical and temporary outcome. Your retention did not get worse; your mix got more casual. Check whether new users spiked before you start rewriting your tutorial.</p></div>
+
+<h2><span class="sec">07</span>The retention checklist</h2>
+
+<ul class="checklist"><li>An onboarding funnel is instrumented and you know your largest drop-off step by name</li><li>A new player reaches a genuine payoff in under five minutes</li><li>There is something to lose by not logging in tomorrow</li><li>A week-one player can name a goal they are working toward</li><li>A month-one player has social systems or competition to fall back on between updates</li><li>You ship a small update every 2&ndash;4 weeks and a large one every 2&ndash;3 months</li><li>You check retention by cohort after every update, segmented by <em>When user first played</em></li></ul>
+<div class="pagenav"><a href="engagement.html"><span>&larr; Previous</span>Engagement</a><a href="acquisition.html"><span>Next &rarr;</span>Acquisition</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

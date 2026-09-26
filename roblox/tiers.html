@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What actually matters &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Every metric Roblox exposes, sorted into four tiers by how much leverage it actually gives you, with the reasoning for each placement.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">What actually matters</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html" aria-current="page"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 02 &nbsp;&middot;&nbsp; Prioritisation</p><h1>Every metric, sorted by leverage</h1><p class="standfirst">Roblox exposes roughly sixty numbers. They are not equally useful, and the dashboard gives you no indication of which are which. Here is the ranking, and the reasoning behind each placement.</p></header>
+
+<p class="lede">The sorting rule: <strong>a metric earns a high tier if changing it changes your
+distribution or your revenue</strong>. A metric that only <em>describes</em> a change someone else caused
+is a diagnostic, however prominently it is displayed.</p>
+
+<div class="tierlist"><div class="tierrow a"><div class="tierbadge">Tier S<span>Moves distribution</span></div><div class="tierbody"><p class="metrics">Play through rate &middot; First play bounce rate &middot; Play days per user &middot; Playtime per user &middot; Intentional co-play days &middot; Qualified sessions per user &middot; Spend days per user &middot; Robux spent per user</p><p>The eight ranking signals themselves, visible under <strong>Acquisition &rsaquo; Home Recommendations</strong>. These are the only numbers Roblox has confirmed feed the Recommended for You sort. Everything below exists to explain movement in these.</p><p>Note they are measured only on organic Home-recommendation traffic, so they will not match the same-named metrics elsewhere in your dashboard.</p></div></div><div class="tierrow b"><div class="tierbadge">Tier A<span>The two Roblox tells you to fix first</span></div><div class="tierbody"><p class="metrics">D1 retention &middot; Average session time &middot; Payer conversion rate &middot; ARPPU</p><p>These are one step removed from the ranking signals but are the levers Roblox itself names in its official growth sequence. D1 retention and average session time are the pair it says to fix <em>before</em> spending anything on acquisition; payer conversion and ARPPU are the pair it says to fix second.</p><p>They are also the metrics with similar-game benchmarks attached, which makes them the only numbers you can meaningfully judge without a baseline of your own.</p></div></div><div class="tierrow b"><div class="tierbadge">Tier A<span>Structural health</span></div><div class="tierbody"><p class="metrics">D7 retention &middot; D30 retention &middot; New user first-session retention &middot; Client crash rate &middot; Out-of-memory exits &middot; ARPDAU</p><p>D7 and D30 tell you whether progression and endgame exist. New user first-session retention &mdash; the &ldquo;still playing after X minutes&rdquo; curve &mdash; is the highest-resolution view of your onboarding that Roblox gives you for free, and it maps almost directly onto first play bounce rate.</p><p>Crash rate and out-of-memory exits belong in this tier because a crash is indistinguishable from a bounce as far as the algorithm is concerned. A memory regression on low-end Android is a distribution problem wearing an engineering costume.</p></div></div><div class="tierrow c"><div class="tierbadge">Tier B<span>Diagnostics &mdash; tells you why, not whether</span></div><div class="tierbody"><p class="metrics">Funnel completion rates &middot; Economy sources &amp; sinks &middot; Average wallet balance &middot; Custom events &middot; Acquisition by source &middot; Play through rate by source &middot; Cohort tables &middot; Demographics &middot; Feedback sentiment &middot; Server FPS &middot; Client FPS &middot; Place-version breakdowns</p><p>Enormously valuable, but only once you know which Tier&nbsp;S or A number moved. Opening the funnel dashboard without a question is how afternoons disappear.</p><p>Two exceptions worth flagging: the <strong>onboarding funnel</strong> and the <strong>economy sources/sinks balance</strong> are diagnostics you should build <em>before</em> you need them, because they are the two that take days of data to become useful.</p></div></div><div class="tierrow d"><div class="tierbadge">Tier C<span>Context only &mdash; never a target</span></div><div class="tierbody"><p class="metrics">Total visits &middot; Favourites &middot; Total playtime &middot; Peak CCU &middot; Total revenue &middot; Like ratio &middot; Compute efficiency &middot; MAU</p><p>All of these are outputs. None of them is a lever. Optimising a total rather than a per-user average puts you directly at odds with a ranking system that explicitly uses averages so that smaller games are not disadvantaged.</p><p><strong>Like ratio</strong> is the interesting case: the community widely treats it as a ranking factor, and Roblox has never listed it as one. It genuinely matters &mdash; it is right there on your details page, affecting play through rate &mdash; but treat it as a conversion input, not an algorithm input. <strong>Compute efficiency</strong> Roblox states outright is &ldquo;not indicative of a good or bad player experience.&rdquo;</p></div></div></div>
+
+<h2><span class="sec">01</span>The honest version of the tier list</h2>
+
+<p>If you only ever look at four numbers, look at these, in this order:</p>
+
+<div class="kpis"><div class="kpi"><span class="k alt">1</span><span class="l">First play bounce rate, under-60s bucket</span></div><div class="kpi"><span class="k">2</span><span class="l">D1 retention vs. your similar-game benchmark</span></div><div class="kpi"><span class="k">3</span><span class="l">Average session time</span></div><div class="kpi"><span class="k">4</span><span class="l">Payer conversion rate</span></div></div>
+
+<p>The reasoning: bounce rate is the fastest-moving and most fixable of the top-tier signals; D1 and
+session time are the two Roblox names first and the two with benchmarks; conversion is the monetization
+metric that moves both revenue <em>and</em> the spend-days signal, because a player who buys once buys again.</p>
+
+<div class="note key"><span class="tag">One number is not a strategy</span><p>These four interact. Cutting your tutorial raises session time and lowers bounce rate but can wreck D7 if players never learn the progression system. Adding a paywall raises conversion and destroys retention. Always check the other three when you move one &mdash; Roblox's Experiments tool reports all of them together for exactly this reason.</p></div>
+
+<h2><span class="sec">02</span>What each metric can and cannot tell you</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Metric</th><th>Answers</th><th>Does not answer</th></tr></thead><tbody><tr><td>D1 retention</td><td>Was the first session good enough to come back to</td><td>Whether they came back a second time, or why they left</td></tr><tr><td>D7 retention</td><td>Is there a progression system worth a week</td><td>Whether the game has an endgame</td></tr><tr><td>D30 retention</td><td>Is there anything to do once you have &lsquo;finished&rsquo;</td><td>Anything about new players</td></tr><tr><td>Average session time</td><td>How long a typical visit lasts</td><td>The <em>shape</em> of the distribution &mdash; a healthy 12&nbsp;min and a bimodal 12&nbsp;min are different games</td></tr><tr><td>New user first-session retention curve</td><td>Exactly which minute you lose people in</td><td>Why, unless you also have a funnel</td></tr><tr><td>Onboarding funnel</td><td>Which step they quit on</td><td>Whether the step is confusing or just boring</td></tr><tr><td>Payer conversion</td><td>Is anyone willing to start spending</td><td>Whether your prices are right</td></tr><tr><td>ARPPU</td><td>How deep your spenders go</td><td>Whether you have enough spenders</td></tr><tr><td>ARPDAU</td><td>Overall monetization health per player</td><td>Which of conversion or depth is the problem &mdash; decompose it</td></tr><tr><td>Economy sources vs. sinks</td><td>Is your currency inflating</td><td>Whether inflation is hurting anything yet</td></tr><tr><td>Average wallet balance</td><td>Are players hoarding currency they cannot spend</td><td>What they would buy if you offered it</td></tr><tr><td>Crash rate</td><td>Are sessions ending involuntarily</td><td>Which device or which build, unless you break it down</td></tr><tr><td>Like ratio</td><td>Broad sentiment, slowly</td><td>Anything timely &mdash; ratings update daily and players can change votes</td></tr><tr><td>Demographics</td><td>Who is actually playing</td><td>Who <em>could</em> be playing</td></tr></tbody></table></div>
+
+<h2><span class="sec">03</span>Metrics people over-weight</h2>
+
+<h3>Peak CCU</h3>
+<p>Tracked obsessively because it is public and comparable. It is a scale readout, not a health readout.
+Two games at 3,000 CCU with different session lengths have completely different DAU, different ranking
+signals and different revenue. If you want a scale number, derive DAU from average CCU and daily playtime
+per user and use that instead.</p>
+
+<h3>Total visits</h3>
+<p>Cumulative and therefore monotonically increasing, which makes it an excellent vanity metric and a
+useless management one. A game in terminal decline still adds visits every day.</p>
+
+<h3>Revenue, in the absence of DAU</h3>
+<p>Revenue is <code>DAU &times; conversion &times; ARPPU</code>. Watching only the product tells you nothing
+about which term moved. Roblox's own AI weekly reports lead with this decomposition for games over
+1,000&nbsp;DAU; below that threshold you have to do it yourself, and it takes about two minutes.</p>
+
+<h3>The similar-games benchmark, as a goal</h3>
+<p>Benchmarks update daily and your benchmark <em>set</em> can change under you &mdash; from all-experiences,
+to genre, to games-with-similar-players &mdash; which will move your apparent percentile without anything
+about your game changing. The dashboard annotates these transitions on the charts. Read the annotation
+before you conclude you improved.</p>
+
+<div class="note trap"><span class="tag">The benchmark is a percentile band, not a score</span><p>When the dashboard shows a D1 retention benchmark of 12.11%&ndash;18.73%, that is the 50th&ndash;90th percentile of similar games: half of them are at or below 12.11%, and the top 10% are at or above 18.73%. Landing at 15% means you are comfortably above median, not that you are failing to reach 18.73%.</p></div>
+
+<h2><span class="sec">04</span>Access requirements, so you know what you are missing</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Feature</th><th>Requirement</th></tr></thead><tbody><tr><td>Full analytics dashboard</td><td>More than 10 DAU and 10 play hours for 7 consecutive days, plus verified email and 2-step verification</td></tr><tr><td>Similar-game benchmark scorecards</td><td>100+ DAU</td></tr><tr><td>Analytics insights</td><td>100+ DAU</td></tr><tr><td>Performance dashboard charts</td><td>100+ DAU</td></tr><tr><td>AI weekly / monthly analytics reports</td><td>1,000+ DAU</td></tr><tr><td>Player feedback reports</td><td>20+ feedback comments</td></tr><tr><td>Useful experiment results</td><td>Roblox warns games under 1,000 DAU may struggle to reach significance</td></tr><tr><td>Funnel / economy / custom dashboards</td><td>No DAU threshold &mdash; but you must instrument the events yourself, from the server, in a published game</td></tr></tbody><caption>The last row is the important one. Instrumentation is the only high-value analytics surface available to a game with no players yet — which makes it the right thing to build before launch.</caption></table></div>
+<div class="pagenav"><a href="discovery.html"><span>&larr; Previous</span>The algorithm</a><a href="engagement.html"><span>Next &rarr;</span>Engagement</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

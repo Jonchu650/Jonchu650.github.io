@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audience & feedback &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Demographics, segmentation and the feedback dashboard — who is actually playing your Roblox game and what they are telling you.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Audience & feedback</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html" aria-current="page"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 08 &nbsp;&middot;&nbsp; Metrics</p><h1>Audience &amp; feedback</h1><p class="standfirst">Who is actually playing, how to slice every other chart by them, and how to read the two qualitative signals Roblox gives you.</p></header>
+
+<h2><span class="sec">01</span>Demographics</h2>
+
+<p><strong>Analytics &rsaquo; Demographics</strong> breaks your <em>monthly</em> active users down five ways.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Dimension</th><th>Detail</th></tr></thead><tbody><tr><td>Country</td><td>Percent of MAU by country. Hover for absolute MAU; download for the full country list</td></tr><tr><td>Gender</td><td>Percent of MAU by gender</td></tr><tr><td>Age</td><td>Percent of MAU by age band</td></tr><tr><td>Top languages</td><td>The top 10 languages spoken by your MAU, with percentages</td></tr><tr><td>Server frame rate</td><td>Included on this page &mdash; frames per second processed by the server</td></tr></tbody><caption>For privacy, any age or gender group with fewer than three users is hidden from the charts.</caption></table></div>
+
+<h3>What to do with it</h3>
+<div class="cards"><div class="card"><p class="ct">Prioritise content</p><p class="cd">Build for the audience you have, not the one you imagined. If your player base skews younger than your design assumptions, your difficulty curve and text density are probably wrong.</p></div><div class="card"><p class="ct">Localise</p><p class="cd">Translate your metadata — title, description — with the top languages in mind. The dashboard's language filter then lets you measure whether a translation actually moved anything.</p></div><div class="card"><p class="ct">Find the gap</p><p class="cd">A country with high MAU and below-average retention is usually a localisation or performance problem, not a taste problem. Check device mix for that region before concluding anything.</p></div><div class="card"><p class="ct">Sell the audience</p><p class="cd">Demographics data is what brand sponsors ask for. It is the only page here with a use outside your own decision-making.</p></div></div>
+
+<h2><span class="sec">02</span>Segmentation: the real power tool</h2>
+
+<p>Demographics is a page. Segmentation is a capability that applies to <em>every</em> chart on every
+analytics page. Filters persist across pages until you turn them off, which makes it easy to forget one
+is on &mdash; worth checking when numbers look inexplicable.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Filter</th><th>Values</th><th>Best use</th></tr></thead><tbody><tr><td><strong>Age group</strong></td><td>&lt;9, 9&ndash;12, 13&ndash;15, 18+ and so on</td><td>Check whether an update landed differently by age</td></tr><tr><td>Gender</td><td>Female, male, unknown</td><td>Content and marketing decisions</td></tr><tr><td>Country / Language</td><td>All countries; all languages</td><td>Measure the impact of a translation directly</td></tr><tr><td><strong>Source</strong></td><td>Home recommendation, search, teleports, sponsored ads and more</td><td>Compare organic vs paid cohort behaviour &mdash; the ranking-relevant comparison</td></tr><tr><td><strong>When user first played</strong></td><td>0&ndash;30, 31&ndash;90, 91&ndash;180, 181&ndash;365, 365+ days ago, never</td><td>Separate &lsquo;new players hate this&rsquo; from &lsquo;veterans hate this&rsquo;</td></tr><tr><td><strong>Active payer status</strong></td><td>Top 15%, intermediate 35%, casual 50%, lapsed, never</td><td>Revenue concentration analysis</td></tr><tr><td><strong>Platform spender status</strong></td><td>Active ($9.99+ anywhere on Roblox in 60 days), other</td><td>Creator Rewards eligibility</td></tr><tr><td><strong>In-experience activity status</strong></td><td>Early (first 30 days), active, lapsed, reactivated, never played</td><td>Lifecycle analysis</td></tr><tr><td><strong>User engagement</strong></td><td>Inactive (0 days), low (1), medium (2&ndash;3), high (4&ndash;7 days in last 7)</td><td>Identify your habit-formed core</td></tr><tr><td>Platform activity status</td><td>New signup (first 60 days), active, lapsed, reactivated</td><td>Platform-wide lifecycle, not just yours</td></tr><tr><td>Platform / OS</td><td>Computer, phone, tablet, console, VR / Android, iOS, Windows, macOS, PlayStation</td><td>Performance and UI issues</td></tr><tr><td>Memory group</td><td>&lt;2&nbsp;GB, 2&ndash;4&nbsp;GB, 4&ndash;8&nbsp;GB, &gt;8&nbsp;GB</td><td>Find the devices failing in your game</td></tr></tbody></table></div>
+
+<div class="note key"><span class="tag">The two segments worth building a habit around</span><p><strong>When user first played</strong> and <strong>Source</strong>. The first separates a &lsquo;retention drop&rsquo; caused by breaking onboarding from one caused by a flood of casual new players. The second separates behaviour the algorithm reads from behaviour it ignores. Check both after every update, before you form a theory.</p></div>
+
+<h3>Cohort maturity</h3>
+<p>In a newly launched game, most DAU comes from players who joined in the last 30 days. As a game
+matures, older cohorts should make up a growing share. Break Engagement down by <em>When user first
+played</em> and watch the shape over months: stable or growing older cohorts mean healthy long-term
+engagement; if your 0&ndash;30 day cohort is stable but the 181&ndash;365 day cohort is falling, acquisition is
+fine and your long-term players are leaving. That is an endgame and content-cadence problem.</p>
+
+<h2><span class="sec">03</span>Feedback</h2>
+
+<div class="placard"><div class="placard-top"><h3>Feedback dashboard</h3><div><span class="chip rank-0">Audience menu</span></div></div><p class="def">Player upvotes, downvotes and comments from the game details screen, with sentiment trends over time.</p><dl><dt>Where</dt><dd>Analytics &rsaquo; Audience &rsaquo; Feedback</dd><dt>Data from</dt><dd>Votes from 1 February 2025; comments from 17 March 2025</dd><dt>Views</dt><dd>Chart view for sentiment trend; detailed table for individual comments</dd><dt>Per row</dt><dd>Rating, device type, platform, and the comment itself &mdash; text-filtered for safety</dd><dt>Export</dt><dd>CSV, from both views</dd></dl></div>
+
+<p>The chart view shows total feedback and percent upvotes across a selected range (7/30/60/90 days or
+custom), with a relative comparison against the preceding equivalent period. Hovering a relative
+percentage reveals the exact dates used.</p>
+
+<div class="note"><span class="tag">Two caveats that matter</span><p>Players can change their rating at any time, and ratings update at the end of each day &mdash; so the dashboard may not match the live rating on your game page. Do not treat same-day feedback movement as real.</p><p>Also: a downvote with a detailed comment is worth more than an upvote with none. Roblox flags this directly. Read the comments on the negatives.</p></div>
+
+<h3>Device and platform on every row</h3>
+<p>Easily the most under-used field in the feedback table. If your negative comments cluster on one
+platform, you do not have a design problem &mdash; you have a performance or UI-scaling problem, and the
+<a href="performance.html">Performance</a> dashboard will confirm it in about a minute.</p>
+
+<h2><span class="sec">04</span>AI reports</h2>
+
+<p>Two automated report types, both gated behind scale.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Report</th><th>Requirement</th><th>Contents</th></tr></thead><tbody><tr><td><strong>Analytics report</strong> (weekly / monthly)</td><td>1,000+ DAU. Monthly in the first week of each month, weekly otherwise</td><td>Top drivers of revenue and DAU change; automatic outlier detection across age, country and platform; player feedback summaries</td></tr><tr><td><strong>Player feedback report</strong></td><td>20+ feedback comments</td><td>What players like, suggestions for improvement, feature requests</td></tr></tbody><caption>Analytics reports are built with Gemini 2.5; feedback reports with Meta Llama 3. Roblox warns that both can make mistakes and should be weighed against your own judgment.</caption></table></div>
+
+<p>The genuinely useful part is <strong>automatic outlier detection</strong> &mdash; it surfaces the kind of
+finding you would only reach by manually filtering twenty combinations, such as &ldquo;retention dropped
+significantly more on iOS, and among 18+ users.&rdquo; If you are under 1,000 DAU you do not get this, so
+do it by hand: after any significant move, check the metric segmented by platform, age band and country
+before you theorise.</p>
+
+<h2><span class="sec">05</span>Insights and achievements</h2>
+
+<p>The game overview page shows <strong>insights</strong> for games with 100+ DAU &mdash; daily-updated callouts
+highlighting large moves in key metrics, with comparison against similar games. Roblox's own example:
+your revenue declined 21% while similar games rose 15%. That contrast is the useful part; an isolated
+&minus;21% could be seasonality.</p>
+
+<p>The <strong>achievement panel</strong> flags six-month highs. Worth noting Roblox's own caveat: a metric
+can be at a six-month high and still be below benchmark. A personal best is not the same as good.</p>
+
+<h2><span class="sec">06</span>The audience checklist</h2>
+
+<ul class="checklist"><li>You know your top three countries and top three languages by MAU</li><li>You know your dominant device class, and you have played your own game on it</li><li>You check <em>When user first played</em> and <em>Source</em> after every update</li><li>You read the feedback comments &mdash; especially the negative ones with detail</li><li>You have checked whether negative feedback clusters on one platform</li><li>No stale filter is left applied across your dashboard</li></ul>
+<div class="pagenav"><a href="performance.html"><span>&larr; Previous</span>Performance</a><a href="instrumentation.html"><span>Next &rarr;</span>Instrumentation</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

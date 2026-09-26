@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acquisition &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Where players come from on Roblox, how each source converts, and how to raise play through rate without lying about your game.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Acquisition</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html" aria-current="page"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 05 &nbsp;&middot;&nbsp; Metrics</p><h1>Acquisition</h1><p class="standfirst">Where new and returning users come from, and how well each source converts. The dashboard that tells you whether your growth is real or rented.</p></header>
+
+<div class="note key"><span class="tag">Sequence matters more here than anywhere else</span><p>Roblox's instruction is unambiguous: before acquiring users &mdash; running ads, announcing an event, doing a creator push &mdash; make sure retention and engagement are already good. Sending traffic into a leaky game does not just waste the traffic; because the ranking signals are per-user averages, it actively worsens your organic position.</p></div>
+
+<h2><span class="sec">01</span>The sources</h2>
+
+<p>Every play is attributed to one of these. Knowing the list matters because the behaviour of each
+cohort is genuinely different &mdash; a player from Search has intent, a player from Sponsored may not.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Source</th><th>Where it is</th><th>Character of the traffic</th></tr></thead><tbody><tr><td><strong>Home recommendations</strong></td><td>Recommended Experiences on Home</td><td>The big one. Algorithmic, personalised, and the only source whose behaviour feeds ranking</td></tr><tr><td><strong>Continue play</strong></td><td>Continue Play on Home</td><td>Returning players. A retention readout wearing an acquisition label</td></tr><tr><td><strong>Today&rsquo;s Picks</strong></td><td>Today's Picks on Home</td><td>Curated</td></tr><tr><td><strong>Home other</strong></td><td>Favourites and everything else on Home</td><td>Mostly existing fans</td></tr><tr><td><strong>Friends</strong></td><td>Friend Activity on Home</td><td>High-intent, high-retention. The cheapest good traffic there is</td></tr><tr><td><strong>Search</strong></td><td>Search results and Recommended Experiences on details pages</td><td>Intent-driven. Now semantic, so natural-language queries work</td></tr><tr><td><strong>Charts</strong></td><td>All sorts on Discover</td><td>Scale-driven. Follows success, rarely causes it</td></tr><tr><td><strong>Sponsored ads</strong></td><td>Sponsored experiences and Sponsored Takeovers on Home</td><td>Paid. Does not count toward ranking</td></tr><tr><td><strong>Search ads</strong></td><td>Paid placement in search results</td><td>Paid, but intent-matched &mdash; usually the best-converting paid format</td></tr><tr><td><strong>Portal ads</strong></td><td>Immersive portals inside other creators' games</td><td>Paid, in-context</td></tr><tr><td><strong>Teleport</strong></td><td>Traffic from another game via teleport</td><td>Depends entirely on the sending game</td></tr><tr><td><strong>Other</strong></td><td>Unattributable, including all external traffic</td><td>Where your TikTok traffic lands unless you use share links</td></tr></tbody></table></div>
+
+<div class="note trap"><span class="tag">Beta mode zeroes your Home recommendations</span><p>If your game has beta mode enabled, all other analytics keep working but Home recommendation metrics read zero &mdash; games in beta are excluded from Recommended for You entirely. If your recommendation numbers are flat zero and you cannot work out why, check this first.</p></div>
+
+<h2><span class="sec">02</span>The charts and what they are for</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Chart</th><th>Question it answers</th></tr></thead><tbody><tr><td>New users with plays per source</td><td>Which sources bring new people</td></tr><tr><td>New users with impressions per source</td><td>Which sources <em>show</em> you to new people</td></tr><tr><td>Returning users with plays per source</td><td>How existing players find their way back</td></tr><tr><td>Returning users with impressions per source</td><td>Where returning players see you</td></tr><tr><td>Play through rate</td><td>What share of impressions become plays &mdash; your conversion</td></tr><tr><td>Cumulative new users funnel</td><td>The whole impression &rarr; play &rarr; retained &rarr; paying chain by source</td></tr></tbody></table></div>
+
+<p>The funnel view carries five columns that turn acquisition from a volume question into a quality one:</p>
+
+<div class="table-scroll"><table><thead><tr><th>Column</th><th>Meaning</th></tr></thead><tbody><tr><td>Users with plays</td><td>Unique new users who played</td></tr><tr><td>Conversion rate</td><td>Percent of new users who played after seeing an impression</td></tr><tr><td>D7 retention</td><td>Percent of players acquired in the range who returned on day 8</td></tr><tr><td>7D playtime per user (cumulative)</td><td>How much the cohort engaged in its first week</td></tr><tr><td>30D payer conversion (cumulative)</td><td>Share of the cohort that paid within 30 days</td></tr><tr><td>30D revenue per user (cumulative)</td><td>Revenue per acquired user over 30 days, excluding subscriptions, engagement payouts and immersive ads</td></tr></tbody><caption>Judge a source by the last four columns, not the first. A channel that sends 10,000 players with 2% D7 is worth less than one sending 1,000 with 15%.</caption></table></div>
+
+<h2><span class="sec">03</span>Play through rate</h2>
+
+<div class="placard"><div class="placard-top"><h3>Play through rate (PTR)</h3><div><span class="chip rank">Ranking signal 01</span><span class="chip rank-2">Benchmarked</span></div></div><p class="def">The percentage of users who play your game after seeing it in a recommendation.</p><dl><dt>Where</dt><dd>Analytics &rsaquo; Acquisition, and the Home Recommendations tab</dd><dt>Determined by</dt><dd>Thumbnail, icon, title, description &mdash; and only those</dd><dt>Benchmark</dt><dd>Available in the similar-games benchmark set</dd><dt>Expect</dt><dd>A temporary drop whenever impressions rise. Roblox says so explicitly</dd></dl></div>
+
+<h3>Raising it honestly</h3>
+<p>Roblox's own guidance and its suppression rules point the same way: PTR rises when your metadata is
+<em>accurate and distinctive</em>, and falls when it is generic, misleading, or leads with a reward.</p>
+
+<ul class="checklist"><li><strong>A title that states the loop.</strong> The best-performing titles on Roblox function as the pitch and the tutorial at once &mdash; a player knows what they will do before they click.</li><li><strong>An icon that reads at tile size.</strong> Test it at the actual rendered size, on a phone, in a grid of competitors.</li><li><strong>Two to five active thumbnails, permanently.</strong> Thumbnail personalisation needs at least two to activate, and Roblox recommends keeping several live so it can adapt as audiences shift.</li><li><strong>Images and video on the details page.</strong> Roblox lists this directly as a play-through lever.</li><li><strong>Metadata that matches the game.</strong> Mismatch is an explicit suppression trigger, not just a conversion problem.</li><li><strong>No monetary hooks in the title.</strong> Leading with implied rewards is explicitly deprioritised.</li></ul>
+
+<div class="kpis"><div class="kpi"><span class="k alt">+8.5%</span><span class="l">Average qualified PTR lift from thumbnail personalisation</span></div><div class="kpi"><span class="k">+50%</span><span class="l">Lift seen by the best-performing games in testing</span></div><div class="kpi"><span class="k">2&ndash;5</span><span class="l">Active thumbnails recommended</span></div></div>
+
+<div class="note win"><span class="tag">The thumbnail testing protocol</span><p>Roblox's recommended rhythm: <strong>test multiple new thumbnails with every major update, then leave them alone until the next one.</strong> Do not pick a single winner and delete the rest &mdash; Roblox shows a case where an apparently weak thumbnail later became the second-best performer. Personalisation keeps giving losers minimal traffic specifically so it can catch that.</p></div>
+
+<h2><span class="sec">04</span>Improving acquisition from Roblox sources</h2>
+
+<p>This is the part creators most often try to solve with marketing, and Roblox's answer is that you
+mostly cannot. Its two listed levers for Home traffic are both game-quality levers:</p>
+
+<ol>
+<li><strong>Improve engagement and retention</strong> &mdash; get session time and D1 retention to or above
+your similar-games benchmark. The algorithm cares because these signal how satisfying the game is.</li>
+<li><strong>Optimise monetization</strong> &mdash; get payer conversion and ARPPU to or above benchmark.
+The algorithm cares because these measure how invested players are.</li>
+</ol>
+
+<p>Beyond that, the levers are metadata (above) and social: experience events and player invite prompts
+bring friends in, which feeds both the Friends source and the co-play ranking signal.</p>
+
+<h2><span class="sec">05</span>External traffic and share links</h2>
+
+<p>Off-platform traffic lands in <strong>Other</strong> and is invisible unless you create share links.
+A share link is a unique trackable URL to your game; the Share Links tab on Analytics Home reports
+<em>Link Visits</em>, and the acquisition funnel can be viewed by link instead of by source.</p>
+
+<p>That turns every external channel into a measurable one. You can finally answer:</p>
+<ul>
+<li><strong>Users with qualified plays</strong> &mdash; how many real players each link brought</li>
+<li><strong>7-day playtime per user</strong> &mdash; which channel brings players who actually engage</li>
+<li><strong>D7 retention</strong> &mdash; which platform's audience sticks</li>
+<li><strong>30-day revenue per user</strong> &mdash; which channel brings players who spend</li>
+</ul>
+
+<div class="note key"><span class="tag">Make one share link per channel, per campaign</span><p>One for TikTok, one for each creator you work with, one per video if you can. The cost is zero and the alternative is guessing. Without them, every external channel is aggregated into a single undifferentiated bucket and you will never know which creator was worth paying.</p></div>
+
+<h3>The rest of the external playbook</h3>
+<div class="cards"><div class="card"><p class="ct">Social accounts on the details page</p><p class="cd">Add YouTube, TikTok, X and Discord links to your game page. Post updates, teasers and screenshots regularly; reply to larger accounts in your space to grow reach.</p></div><div class="card"><p class="ct">A community, not an audience</p><p class="cd">A place for feedback, bug reports, suggestions and fan art. Roblox frames this as a retention engine — it keeps existing players engaged rather than finding new ones.</p></div><div class="card"><p class="ct">Creators and other developers</p><p class="cd">Partner with developers making similar games to grow together. Influencer reach is real but treat micro-creators as the efficient tier, not the consolation prize.</p></div></div>
+
+<h2><span class="sec">06</span>Paid: what the numbers mean</h2>
+
+<p>Ads Manager covers sponsored experiences, search ads and immersive portal ads. The reporting is
+straightforward but the attribution rules are not, and they are where the confusion lives.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition</th></tr></thead><tbody><tr><td>Impressions</td><td>Times your ad was shown</td></tr><tr><td>Clicks</td><td>Times players clicked your ad on Home or Search</td></tr><tr><td>Plays</td><td>Times players entered and started playing as a result of the campaign</td></tr><tr><td><strong>CPP</strong> (cost per play)</td><td>Total spend divided by plays. The number to optimise</td></tr><tr><td>Playtime</td><td>Total time players spent in your game as a result of the campaign</td></tr><tr><td>Robux earnings</td><td>Cumulative Robux attributed to the campaign &mdash; includes ad revenue and Creator Rewards, excludes subscriptions</td></tr></tbody></table></div>
+
+<p><strong>Attribution timing:</strong> impressions and clicks report in real time, but plays and earnings
+rely on attribution and can include events up to <strong>30 days</strong> after an ad is served. A campaign
+that looks unprofitable on day two may not be. Judge campaigns on a 30-day window, not a daily one.</p>
+
+<p><strong>Resurrection credit:</strong> if a player returns via an ad after 7+ days away, they count as
+resurrected by that ad, and their plays and Robux spend are credited to it for the next 7 days. Campaign
+performance in the <em>All Users</em> view can therefore look weak while <em>Recent Users</em> or
+<em>Resurrected Users</em> shows the real effect. Check all three views before killing a campaign.</p>
+
+<div class="note trap"><span class="tag">The thing paid traffic cannot do</span><p>None of it feeds the ranking stage. Ads are for revenue, for reaching a specific audience, and for getting into the retrieval candidate pool in the first place. If your plan is &ldquo;buy players until the algorithm notices,&rdquo; the algorithm has been explicitly built not to notice.</p></div>
+<div class="pagenav"><a href="retention.html"><span>&larr; Previous</span>Retention</a><a href="monetization.html"><span>Next &rarr;</span>Monetization</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

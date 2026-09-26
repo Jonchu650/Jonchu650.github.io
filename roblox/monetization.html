@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monetization &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Revenue, payer conversion, ARPPU and ARPDAU on Roblox — how they decompose, what the benchmarks are, and how Creator Rewards changes what you optimise for.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Monetization</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html" aria-current="page"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 06 &nbsp;&middot;&nbsp; Metrics</p><h1>Monetization</h1><p class="standfirst">Two of the eight ranking signals are monetary, and they reward frequency over size. That single fact should reshape how you price things.</p></header>
+
+<h2><span class="sec">01</span>The decomposition</h2>
+
+<p>Every monetization conversation should start here, because revenue never moves for a mysterious reason.</p>
+
+<pre><code>Revenue   =  DAU  &times;  ARPDAU
+ARPDAU    =  payer conversion rate  &times;  ARPPU</code></pre>
+
+<div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition</th><th>Benchmarked?</th></tr></thead><tbody><tr><td><strong>Revenue</strong></td><td>Hourly and daily revenue, split by developer products, passes and commissions</td><td>No</td></tr><tr><td><strong>Conversion rate</strong></td><td>Percent of daily active users who are also paying users</td><td>Yes</td></tr><tr><td><strong>Paying users</strong></td><td>Number of DAU who purchased a game-related item</td><td>No</td></tr><tr><td><strong>ARPPU</strong></td><td>Average revenue per <em>paying</em> user &mdash; your spend depth</td><td>Yes</td></tr><tr><td><strong>ARPDAU</strong></td><td>Average revenue per daily active user &mdash; overall monetization health</td><td>Yes</td></tr></tbody><caption>Found under Monetization › Overview. Conversion, ARPPU and ARPDAU all carry similar-game benchmark bands at 100+ DAU.</caption></table></div>
+
+<div class="note key"><span class="tag">The diagnostic that saves the most time</span><p><strong>High ARPPU with low ARPDAU means your revenue comes from a narrow slice of players.</strong> Roblox names this pattern explicitly. The fix is not more expensive items for your whales &mdash; it is widening the base. Conversely, decent ARPDAU with low ARPPU means plenty of people buy but nobody goes deep, and you need higher-value options.</p></div>
+
+<h2><span class="sec">02</span>What the numbers are</h2>
+
+<figure><p class="chart-title">ARPPU across Roblox, per game</p><p class="chart-sub">USD equivalent, percentile distribution</p><div class="bars"><div class="bar-row"><div class="bl">p25</div><div class="bar-track"><div class="bar-fill c3" style="width:0.6%"></div></div><div class="bar-val">$0.32</div></div><div class="bar-row"><div class="bl">p50 &nbsp;median</div><div class="bar-track"><div class="bar-fill c3" style="width:1.2%"></div></div><div class="bar-val">$0.70</div></div><div class="bar-row"><div class="bl">p75</div><div class="bar-track"><div class="bar-fill c3" style="width:2.2%"></div></div><div class="bar-val">$1.25</div></div><div class="bar-row"><div class="bl">p90</div><div class="bar-track"><div class="bar-fill c3" style="width:4.0%"></div></div><div class="bar-val">$2.33</div></div><div class="bar-row"><div class="bl">p95</div><div class="bar-track"><div class="bar-fill c3" style="width:8.3%"></div></div><div class="bar-val">$4.80</div></div><div class="bar-row"><div class="bl">p99</div><div class="bar-track"><div class="bar-fill c3" style="width:95.4%"></div></div><div class="bar-val">$55.31</div></div></div><figcaption>GameAnalytics 2026 Roblox Benchmark Report. Note the shape: the p99 is roughly 79× the median. Monetization outcomes on Roblox are extraordinarily top-heavy, far more so than retention or session length.</figcaption></figure>
+
+<div class="kpis"><div class="kpi"><span class="k alt">3.80%</span><span class="l">Share of tracked players who paid anything at all, platform-wide</span></div><div class="kpi"><span class="k">~50%</span><span class="l">Share of revenue from the top 15% of active payers, on average</span></div><div class="kpi"><span class="k">$0.81</span><span class="l">Median spend by a paying player, platform-wide</span></div></div>
+
+<p class="lede" style="margin-top:22px">Two facts to hold together: <strong>fewer than one player in
+twenty-five ever spends anything</strong>, and <strong>about half your revenue will come from roughly
+one-seventh of the people who do.</strong> Your monetization design has to serve both realities at once.</p>
+
+<h2><span class="sec">03</span>Payer segmentation</h2>
+
+<p>Roblox exposes two different spender segmentations and they are easy to confuse.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Segment</th><th>Basis</th><th>Values</th></tr></thead><tbody><tr><td><strong>Active payer status</strong></td><td>Percentile-based, <em>within your game</em>, recalculated daily</td><td>Top 15% (85th&ndash;100th percentile of your spenders) &middot; Intermediate 35% (50th&ndash;84th) &middot; Casual 50% (0th&ndash;49th) &middot; Lapsed (no spend in 30 days) &middot; Never</td></tr><tr><td><strong>Platform spender status</strong></td><td>Fixed threshold, <em>across all of Roblox</em></td><td>Active &mdash; spent $9.99 or more anywhere on Roblox in the last 60 days &middot; Other</td></tr></tbody><caption>Platform spender status matters because it matches the Creator Rewards definition of an Active Spender — the players who earn you Daily Engagement Rewards.</caption></table></div>
+
+<p><strong>How to use it:</strong> go to Monetization &rsaquo; Overview, break down by Active Payer Status,
+and check it across several time intervals. If your top 15% contributes materially less than half your
+revenue, you have room to retain or monetize top spenders better. If it contributes materially more, your
+mid- and low-tier value proposition is too thin and you are one whale's departure from a bad quarter.</p>
+
+<h2><span class="sec">04</span>Raising payer conversion</h2>
+
+<div class="placard"><div class="placard-top"><h3>Payer conversion rate</h3><div><span class="chip rank">Roblox says fix this second</span><span class="chip rank-2">Benchmarked</span></div></div><p class="def">The percent of your users who engage with paid features or content at all.</p><dl><dt>Why it leads</dt><dd>A player who makes one purchase is much more likely to purchase again</dd><dt>Feeds</dt><dd>Spend days per user (ranking signal 07) and Robux spent per user (08)</dd><dt>Diagnose with</dt><dd>A shop funnel &mdash; open store &rarr; view item &rarr; add to cart &rarr; purchase</dd></dl></div>
+
+<ul class="checklist"><li><strong>Find out why it is low first.</strong> Roblox lists three usual suspects: items priced too high, poor item or shop visibility, and content nobody wants.</li><li><strong>Welcome offers and first-purchase discounts.</strong> Lowering the barrier to the <em>first</em> purchase is the highest-leverage monetization change available, because the first purchase is what predicts the rest.</li><li><strong>Analyse the purchase funnel.</strong> Unclear steps and distractions mid-flow kill completions. Instrument it as a recurring funnel with a <code>funnelSessionId</code>.</li><li><strong>Treat the storefront as a designed space.</strong> Roblox's phrasing: devote as much creativity and attention to your shop as to the rest of the game.</li></ul>
+
+<h2><span class="sec">05</span>Raising ARPPU</h2>
+
+<ul class="checklist"><li><strong>Mix one-time and repeatable purchases.</strong> Durables for commitment, consumables and currency for repeat spend. A shop of only durables has a hard revenue ceiling per player.</li><li><strong>Widen the catalogue.</strong> If there are only a few items, a willing spender runs out of things to buy. Find your top sellers and expand around them.</li><li><strong>Seasonal items.</strong> Holidays and real-world events create urgency and a reason to look at the shop again.</li></ul>
+
+<h2><span class="sec">06</span>Raising ARPDAU</h2>
+
+<ul class="checklist"><li><strong>Multiple price points.</strong> Some players will only ever spend a small amount. A wide ladder captures them instead of excluding them.</li><li><strong>Improve retention and engagement.</strong> More sessions means more purchase opportunities and more investment in the game. Retention is a monetization lever, not a separate concern.</li></ul>
+
+<div class="note win"><span class="tag">Price ladders are an algorithm strategy</span><p>The ranking signals include <em>spend days per user</em> &mdash; the number of unique days a player spends anything &mdash; listed <strong>before</strong> Robux spent per user. One 1,000&nbsp;Robux gamepass produces one spend day. Ten 80&nbsp;Robux consumables spread across ten days produce ten.</p><p>Same revenue, ten times the signal. If you take one monetization idea from this manual, take this one: build a cheap, repeatable, frequently-refreshed purchase into your economy, even if it is not where the money is.</p></div>
+
+<h2><span class="sec">07</span>The product types</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Product</th><th>Shape</th><th>Best for</th></tr></thead><tbody><tr><td><strong>Passes</strong></td><td>One-time purchase, permanent effect</td><td>Durable value: access, cosmetics, permanent multipliers</td></tr><tr><td><strong>Developer products</strong></td><td>Repeatable purchase, consumable</td><td>Currency, refills, boosts. The engine of spend days</td></tr><tr><td><strong>Subscriptions</strong></td><td>Recurring monthly</td><td>Committed players. Excluded from the 30D revenue-per-user acquisition column</td></tr><tr><td><strong>Private servers</strong></td><td>Recurring, per-server</td><td>Social groups. Also feeds intentional co-play</td></tr><tr><td><strong>Avatar items</strong></td><td>Marketplace UGC</td><td>Brand extension; tracked separately on Analytics Home</td></tr><tr><td><strong>Immersive ads</strong></td><td>Passive ad revenue in-game</td><td>Scale games. Portal ads also act as an acquisition channel for others</td></tr><tr><td><strong>Creator Rewards</strong></td><td>Platform payouts</td><td>See below &mdash; not something you sell, but something you design for</td></tr></tbody></table></div>
+
+<h2><span class="sec">08</span>Creator Rewards</h2>
+
+<p>Creator Rewards replaced Engagement-Based Payouts in July 2025. Two mechanisms, and the first one
+sets a hard design target.</p>
+
+<div class="placard"><div class="placard-top"><h3>Daily Engagement Rewards</h3><div><span class="chip rank">Sets a 10-minute target</span></div></div><p class="def">5 Robux per day, per Active Spender, if your game is one of the first three experiences they launch that day and they play it for 10+ minutes.</p><dl><dt>Active Spender</dt><dd>Has spent $9.99+ anywhere on Roblox in the past 60 days, and is not a new or reactivated user</dd><dt>Threshold</dt><dd>10 minutes in a day, cumulative across sessions</dd><dt>Constraint</dt><dd>Must be one of the first three experiences launched that day</dd><dt>Implication</dt><dd>Median session length for this segment must clear 10 minutes or most of it earns nothing</dd></dl></div>
+
+<p>Roblox's own worked examples make the rule concrete: a player who spends 2 minutes in one game, 5 in
+another, 10 in a third, 5 in a fourth and 10 more in the first earns rewards for the games where they
+crossed 10 minutes &mdash; but a fifth game they played for 15 minutes earns nothing, because it was the
+fourth experience they launched that day.</p>
+
+<div class="note key"><span class="tag">Check this in your own dashboard</span><p>Filter Acquisition by <strong>Platform spender status &rarr; Active spender</strong> and review <em>Unique users with plays by source</em>. Then check Engagement &rsaquo; Average Playtime for the same segment. If average playtime for active spenders sits near or below 10 minutes, a large share of your qualifying players never actually qualify &mdash; and closing that gap is pure upside with no pricing risk attached.</p></div>
+
+<div class="cards"><div class="card"><p class="ct">Audience Expansion Rewards</p><p class="cd">Bring a genuinely new user to Roblox, or reactivate one lapsed 60+ days, and you earn a 35% revenue share on their first $100 of qualifying purchases anywhere on the platform during their first 60 days.</p></div><div class="card"><p class="ct">Why share links matter here</p><p class="cd">Attribution is what makes this pay. Off-platform traffic without a share link is attributed to nobody in particular.</p></div></div>
+
+<h2><span class="sec">09</span>Economy balance</h2>
+
+<p>If you instrument economy events you unlock the Economy dashboard, which is where in-game currency
+problems become visible before they become retention problems.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Chart</th><th>Healthy looks like</th><th>Action if not</th></tr></thead><tbody><tr><td>Total sources and sinks by category</td><td>Sources minus sinks close to zero</td><td>If the net total is growing, add sinks</td></tr><tr><td>Average wallet balance</td><td>Flat or slowly rising, similar shape for payers and non-payers</td><td>Growing balances &mdash; especially for payers &mdash; means you need new sinks</td></tr><tr><td>Top sources and sinks</td><td>In-app purchases visible among sources</td><td>If nobody sources currency from IAP, prices are too high or the options are wrong</td></tr><tr><td>All sources and sinks</td><td>A combined view over your chosen range</td><td>Use for month-over-month drift</td></tr></tbody></table></div>
+
+<p>Currency inflation is a slow failure mode: balances rise, prices feel irrelevant, purchases stop
+mattering, and conversion quietly decays over months. The Economy dashboard is the only early-warning
+system you get, and it requires instrumentation you have to add yourself.</p>
+
+<h2><span class="sec">10</span>Regional pricing and sales data</h2>
+
+<p>Roblox supports regional pricing so the same item can cost differently by market. Worth enabling
+before you conclude a region simply does not spend.</p>
+
+<p>For deeper analysis, download the sales CSV: <strong>Transactions &rsaquo; Sales of Goods &rsaquo; Download
+Data</strong>, one calendar month at a time, up to two years back. It requires a verified email and an
+authenticator app as your 2-step method, and arrives as a download link that expires in 48 hours. Each row
+carries buyer user ID, timestamp, sale location, universe, asset, asset type, hold status, revenue and
+price &mdash; enough to do cohort and pricing analysis that the dashboard will not do for you.</p>
+
+<div class="note"><span class="tag">One useful thing to do with the CSV</span><p>Filter for pending Robux to work out when your payout actually releases. Useful for planning a DevEx cash-out or paying collaborators, and not available anywhere in the dashboard UI.</p></div>
+<div class="pagenav"><a href="acquisition.html"><span>&larr; Previous</span>Acquisition</a><a href="performance.html"><span>Next &rarr;</span>Performance</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

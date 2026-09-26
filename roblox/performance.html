@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Performance &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Roblox's client and server performance dashboards: crash rate, frame rate, memory and CPU time — and why a memory regression is a distribution problem.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Performance</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html" aria-current="page"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 07 &nbsp;&middot;&nbsp; Metrics</p><h1>Performance</h1><p class="standfirst">A crash and a bounce are the same event as far as the algorithm is concerned. This is the dashboard where engineering problems become ranking problems.</p></header>
+
+<div class="note key"><span class="tag">Why this page sits alongside the metric pages</span><p>First play bounce rate is the second-most-important ranking signal, and it is measured in two buckets &mdash; under 60 seconds, and 61&ndash;180 seconds. A large share of under-60-second exits on any given game are not creative failures at all. They are slow loads, out-of-memory kills on low-end Android, and first-frame breakage. Performance work is retention work.</p></div>
+
+<h2><span class="sec">01</span>Access and layout</h2>
+
+<p><strong>Creator Hub &rsaquo; Creations &rsaquo; your game &rsaquo; Monitoring &rsaquo; Performance.</strong>
+The header shows current users, server count and device breakdown immediately; the client and server
+<em>charts</em> require <strong>100+ DAU</strong>.</p>
+
+<p>Two tabs, Client and Server, plus date range and interval controls, and a <strong>Place</strong> menu to
+examine individual places rather than the whole universe.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Control</th><th>What it does</th><th>When to use it</th></tr></thead><tbody><tr><td><strong>Filter By &rsaquo; percentile</strong></td><td>Swap averages for P10, P50 or P90</td><td>Always. Averages hide the players having a bad time</td></tr><tr><td><strong>Breakdown by Place Version</strong></td><td>Compare your latest build against every previous one</td><td>After every publish. This is the fastest regression finder Roblox gives you</td></tr><tr><td><strong>Memory group filter</strong></td><td>&lt;2&nbsp;GB, 2&ndash;4&nbsp;GB, 4&ndash;8&nbsp;GB, &gt;8&nbsp;GB device buckets</td><td>When crashes are concentrated somewhere you cannot reproduce</td></tr><tr><td><strong>Roblox update annotations</strong></td><td>Marks platform releases on your charts</td><td>When performance moved and you did not ship anything</td></tr></tbody></table></div>
+
+<div class="note"><span class="tag">Reading percentiles</span><p>If P90 server heartbeat is 59, then 90% of your servers run at or below 59&nbsp;FPS. If P10 is 40, the worst 10% of servers are at or below 40&nbsp;FPS. P50 is the median. Your <em>P10 client frame rate</em> is the number that describes the experience of the players most likely to leave.</p></div>
+
+<h2><span class="sec">02</span>Client charts</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Chart</th><th>What it tells you</th><th>Target</th></tr></thead><tbody><tr><td>Concurrent users</td><td>Players in your game right now</td><td>Context only</td></tr><tr><td>Session time</td><td>Duration of visits, by platform</td><td>See <a href='engagement.html'>Engagement</a></td></tr><tr><td><strong>Client frame rate</strong></td><td>FPS on players' devices</td><td>Stable; investigate persistent lows or large drops</td></tr><tr><td><strong>Client crash rate</strong></td><td>Crashes divided by ended sessions, by device type</td><td>As low as possible. Spikes after an update are the signal</td></tr><tr><td><strong>Out-of-memory exits</strong></td><td>Crashes from OOM errors or low-memory warnings</td><td>A spike after an update is a memory regression, full stop</td></tr><tr><td>Client crash count</td><td>Raw crash counts by device</td><td>Use when crash <em>rate</em> is too noisy</td></tr><tr><td>Client memory usage</td><td>Memory in MB by device type</td><td>Continual increase means a leak</td></tr><tr><td><strong>Client memory usage %</strong></td><td>Share of available device memory in use</td><td>If the Android line approaches 100%, most Android players are at risk of crashing</td></tr><tr><td><strong>Client CPU time</strong></td><td>Milliseconds of processing per frame</td><td><strong>Below 16&nbsp;ms</strong> to hold 60&nbsp;FPS</td></tr></tbody></table></div>
+
+<div class="kpis"><div class="kpi"><span class="k alt">&lt;16 ms</span><span class="l">Client CPU time per frame for 60 FPS</span></div><div class="kpi"><span class="k">&lt;16 ms</span><span class="l">Server CPU time per frame for 60 FPS</span></div><div class="kpi"><span class="k">&lt;3 GB</span><span class="l">Server memory guideline</span></div><div class="kpi"><span class="k">60 FPS</span><span class="l">Server frame rate cap &mdash; and the target</span></div></div>
+
+<div class="note trap"><span class="tag">Dashed lines mean do not trust the number</span><p>When ended sessions are low, crash rate breakdowns become unstable and the chart draws a dashed line instead of a solid one. That is Roblox telling you the data point is noisy. Check total crash <em>count</em> instead of crash rate when you see it &mdash; otherwise you will chase a 40% crash rate that represents two sessions.</p></div>
+
+<h2><span class="sec">03</span>Server charts</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Chart</th><th>What it tells you</th><th>Target</th></tr></thead><tbody><tr><td><strong>Server CPU time</strong></td><td>Milliseconds per frame, as a stacked area by process group</td><td>Below 16&nbsp;ms for 60&nbsp;FPS</td></tr><tr><td><strong>Server frame rate</strong></td><td>Server FPS, capped at 60</td><td>Ideally always 60. Drops reduce client FPS and raise latency</td></tr><tr><td><strong>Server memory usage</strong></td><td>MB in use</td><td>Below 50% of total server memory; as a rule of thumb, stay under 3&nbsp;GB</td></tr><tr><td>Server memory by age</td><td>Memory usage against server lifetime</td><td>Flat. Growth over a server's life means a leak &mdash; check scripts, physics, rendering</td></tr><tr><td>Cores used per server</td><td>CPU core usage</td><td>Low cores + high CPU time means you should look at multithreading</td></tr><tr><td>Compute efficiency</td><td>Your efficiency vs the Roblox average</td><td>Not a player-experience metric. Roblox says so explicitly</td></tr></tbody></table></div>
+
+<h3>Drilling into a spike</h3>
+<p>The CPU and memory charts default to an <strong>Overall</strong> view but have dropdowns for individual
+process groups &mdash; physics, rendering, scripts and so on. The category names map directly onto the
+MicroProfiler's groups, so when you spot a suspicious process on the dashboard you can take a server dump,
+switch to Timers mode, and filter by that same group name to find it.</p>
+
+<p>Memory tags map onto <code>Enum.DeveloperMemoryTag</code>, with one exception:
+<strong>CoreMemory:Total</strong> corresponds to <code>Internal</code>. Use the Developer Console's memory
+view to chase a specific tag &mdash; if the dashboard shows <code>PlaceMemory:GraphicsTexture</code> climbing,
+that is where you look.</p>
+
+<p>One caveat Roblox flags: the sum of the process categories is <em>not</em> comprehensive. The server does
+a small amount of uncategorised work each frame, so overall values read slightly low. Close enough to act
+on, not exact.</p>
+
+<h2><span class="sec">04</span>Client API calls in the first 60 seconds</h2>
+
+<div class="placard"><div class="placard-top"><h3>Client API calls in first 60s after join</h3><div><span class="chip rank-0">Top games only</span></div></div><p class="def">Total requests your game makes to Roblox services during the first minute after a player joins.</p><dl><dt>Where</dt><dd>Game overview &rsaquo; Snapshot graph &rsaquo; Explore &rsaquo; select the metric</dd><dt>Updates</dt><dd>Hourly &mdash; fast enough to check right after publishing</dd><dt>Healthy</dt><dd>Asset delivery is the most-hit API. You are prioritising loading</dd><dt>Unhealthy</dt><dd>Inventory, friends or users is the most-hit API &mdash; you are running heavy non-critical calls during the join sequence</dd></dl></div>
+
+<p>Currently only available to a small number of top games, but the principle generalises to everyone:
+<strong>the first 60 seconds should be spent streaming assets and nothing else.</strong> Every inventory
+lookup, leaderboard fetch or friends query you fire on <code>PlayerAdded</code> is competing with your own
+load time &mdash; which is competing with your under-60-second bounce rate, which is the second-most-important
+ranking signal. Defer anything the player cannot see yet.</p>
+
+<h2><span class="sec">05</span>The performance response protocol</h2>
+
+<ol>
+<li><strong>Check recent updates.</strong> If the impact is severe, roll back first and diagnose after.</li>
+<li><strong>Break down by place version</strong> to confirm the regression belongs to your new build and
+not to a platform release.</li>
+<li><strong>Break down by platform, OS and memory group</strong> to find who is actually affected.</li>
+<li><strong>Use the built-in tools</strong> &mdash; Developer Console for errors, logs, memory and networking;
+Script Profiler for expensive scripts; MicroProfiler for a visual frame breakdown.</li>
+<li><strong>Ask your community.</strong> Players reproduce device-specific bugs you never will.</li>
+</ol>
+
+<h2><span class="sec">06</span>The pre-publish checklist</h2>
+
+<ul class="checklist"><li>Tested on a phone, not just in Studio &mdash; ideally a cheap Android one</li><li>Client CPU time under 16&nbsp;ms on your target device tier</li><li>Server memory flat over a server's lifetime, not climbing</li><li>No heavy API calls fired on player join</li><li>Client memory usage percentage well clear of 100% on the lowest memory group you support</li><li>Crash rate and OOM exits checked against the previous place version after every publish</li><li>Error report reviewed &mdash; a silent script error can be costing sessions</li></ul>
+<div class="pagenav"><a href="monetization.html"><span>&larr; Previous</span>Monetization</a><a href="audience.html"><span>Next &rarr;</span>Audience & feedback</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

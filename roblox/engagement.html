@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engagement &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Session time, playtime per user, play days and active-user metrics — what they mean, what good looks like, and the specific levers that move each one.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Engagement</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html" aria-current="page"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 03 &nbsp;&middot;&nbsp; Metrics</p><h1>Engagement</h1><p class="standfirst">How much of a player's attention you actually hold. Three of the eight ranking signals live here, and it is the half of the retention/engagement pair that you can move in a single update.</p></header>
+
+<h2><span class="sec">01</span>The metrics</h2>
+
+<div class="placard"><div class="placard-top"><h3>Average session time</h3><div><span class="chip rank">Tier A</span><span class="chip rank-2">Benchmarked</span></div></div><p class="def">Total playtime divided by number of sessions.</p><dl><dt>Where</dt><dd>Analytics &rsaquo; Engagement</dd><dt>Feeds</dt><dd>Playtime per user (ranking signal 04), first play bounce rate (02)</dd><dt>Benchmark</dt><dd>Similar-games band available at 100+ DAU</dd><dt>Watch for</dt><dd>The average hides the distribution. Two games at 10 minutes can be completely different</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>Daily / weekly / monthly active users</h3><div><span class="chip rank-0">Tier C as a target</span></div></div><p class="def">Unique players who joined at least once in the day, week or month.</p><dl><dt>Where</dt><dd>Analytics &rsaquo; Engagement, and the watchlist on Analytics Home</dd><dt>Use for</dt><dd>Scale, trend, and as the denominator in ARPDAU</dd><dt>Do not</dt><dd>Treat as a goal. DAU is an output of retention and acquisition, not a lever</dd><dt>Ratio</dt><dd>DAU &divide; MAU is your stickiness &mdash; the share of your monthly audience present on an average day</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>New user first session retention</h3><div><span class="chip rank">Tier A</span><span class="chip rank-0">Highest resolution you get</span></div></div><p class="def">The percentage of new users still playing X minutes after joining for the first time, compared against the previous period.</p><dl><dt>Where</dt><dd>Analytics &rsaquo; Engagement</dd><dt>Feeds</dt><dd>First play bounce rate (ranking signal 02) almost directly</dd><dt>Reads as</dt><dd>A survival curve. The steepest segment is your worst moment</dd><dt>Pair with</dt><dd>An onboarding funnel, so you know <em>what</em> is at that minute mark</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>Playtime per user</h3><div><span class="chip rank">Tier S</span><span class="chip rank-0">Capped at 60 min/day</span></div></div><p class="def">Average time spent per user per day. In the ranking signal, capped at 60 minutes per user, per game, per day.</p><dl><dt>Where</dt><dd>Acquisition &rsaquo; Home Recommendations for the ranked version; Engagement for the overall one</dd><dt>Segments</dt><dd>D1 &middot; D2&ndash;7 &middot; D8&ndash;28</dd><dt>Strategy</dt><dd>Raise the floor, not the ceiling. Above 60 minutes the signal stops paying</dd></dl></div>
+
+<h2><span class="sec">02</span>What good looks like</h2>
+
+<figure><p class="chart-title">Average session length across Roblox</p><p class="chart-sub">Percentile distribution, per game</p><div class="bars"><div class="bar-row"><div class="bl">p25</div><div class="bar-track"><div class="bar-fill " style="width:33.2%"></div></div><div class="bar-val">7.3 min</div></div><div class="bar-row"><div class="bl">p50 &nbsp;median</div><div class="bar-track"><div class="bar-fill " style="width:44.5%"></div></div><div class="bar-val">9.8 min</div></div><div class="bar-row"><div class="bl">p75</div><div class="bar-track"><div class="bar-fill " style="width:54.5%"></div></div><div class="bar-val">12.0 min</div></div><div class="bar-row"><div class="bl">p90</div><div class="bar-track"><div class="bar-fill " style="width:66.8%"></div></div><div class="bar-val">14.7 min</div></div><div class="bar-row"><div class="bl">p95</div><div class="bar-track"><div class="bar-fill " style="width:75.5%"></div></div><div class="bar-val">16.6 min</div></div><div class="bar-row"><div class="bl">p99</div><div class="bar-track"><div class="bar-fill " style="width:95.9%"></div></div><div class="bar-val">21.1 min</div></div></div><figcaption>GameAnalytics 2026 Roblox Benchmark Report — 500+ titles with 1M+ MAU, 4.76 billion sessions, Aug 2025–Jul 2026. Third-party sample: games using the GameAnalytics SDK, so it skews toward instrumented mid-size titles.</figcaption></figure>
+
+<figure><p class="chart-title">Sessions per day, per game</p><p class="chart-sub">How many separate visits an active player makes</p><div class="bars"><div class="bar-row"><div class="bl">p25</div><div class="bar-track"><div class="bar-fill c3" style="width:15.6%"></div></div><div class="bar-val">1.34</div></div><div class="bar-row"><div class="bl">p50 &nbsp;median</div><div class="bar-track"><div class="bar-fill c3" style="width:18.1%"></div></div><div class="bar-val">1.56</div></div><div class="bar-row"><div class="bl">p75</div><div class="bar-track"><div class="bar-fill c3" style="width:24.1%"></div></div><div class="bar-val">2.07</div></div><div class="bar-row"><div class="bl">p90</div><div class="bar-track"><div class="bar-fill c3" style="width:37.4%"></div></div><div class="bar-val">3.22</div></div><div class="bar-row"><div class="bl">p95</div><div class="bar-track"><div class="bar-fill c3" style="width:47.2%"></div></div><div class="bar-val">4.06</div></div><div class="bar-row"><div class="bl">p99</div><div class="bar-track"><div class="bar-fill c3" style="width:96.5%"></div></div><div class="bar-val">8.30</div></div></div><figcaption>Same source. Note the shape: most games get roughly one and a half visits a day, and the top decile gets three or more. Multiple daily sessions is a design outcome, not an accident.</figcaption></figure>
+
+<div class="note key"><span class="tag">The 10-minute line</span><p>Creator Rewards pays 5&nbsp;Robux per day for each <em>Active Spender</em> who plays your game for <strong>10+ minutes</strong>, provided yours is one of the first three experiences they launch that day. Roblox's own documentation tells you to check whether your average playtime is near or below that threshold, because if it is, most of your qualifying players never qualify.</p><p>That makes 10 minutes a hard, non-arbitrary target for median session length &mdash; not average, median. It is one of the few places on Roblox where a specific number has money attached to it.</p></div>
+
+<h2><span class="sec">03</span>Moving average session time</h2>
+
+<p>Roblox's guidance splits cleanly into two halves: get them into the fun immediately, and give them a
+reason to come back. The first half is what moves session time and bounce rate.</p>
+
+<h3>Get into the fun immediately</h3>
+<p>The friction of joining and leaving a Roblox game is close to zero, which makes first impressions
+disproportionately valuable. Roblox's three rules:</p>
+
+<ul class="checklist"><li><strong>Fun within five minutes.</strong> Whatever makes your game distinctive should be communicated inside the first five minutes &mdash; not described, experienced.</li><li><strong>No long tutorials.</strong> Make learning contextual and action-based: short unobtrusive prompts when a player first meets a feature, tooltips in the shop. Give starter items and currency so the core loop is reachable immediately.</li><li><strong>Remove barriers to social interaction.</strong> Group play and social contact are core to how successful Roblox games work; design for them rather than around them.</li></ul>
+
+<h3>Give a reason to come back</h3>
+<ul class="checklist"><li><strong>Clear goals at three time horizons.</strong> Short-term for instant gratification, mid-term for direction, long-term for aspiration &mdash; completing a collection, hitting the top rank, landing a rare item.</li><li><strong>A progression system</strong> that makes existing content last longer, buying you time to build more.</li><li><strong>Progression that does not gate the fun.</strong> Enough content must be available upfront that a brand-new player still has a good first session.</li></ul>
+
+<div class="note win"><span class="tag">The single highest-leverage session-time change</span><p>Find the distribution, not the average. Export your session data, or use a custom event logging session length, and look at the bottom quartile. Almost every game has a cluster of sessions under two minutes; almost every such cluster has one cause, and it is usually load time, a confusing first screen, or a device-specific failure. Fixing it moves the average, the bounce rate and the qualified-session signal simultaneously.</p></div>
+
+<h2><span class="sec">04</span>Moving play days per user</h2>
+
+<p>Play days is a separate problem from session time, and the solutions barely overlap. Session time is
+about the current visit. Play days is about the gap between visits.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Mechanism</th><th>Why it works</th><th>Watch out for</th></tr></thead><tbody><tr><td><strong>Daily reward with escalating streak</strong></td><td>Creates a cost to missing a day. Cheapest possible intervention</td><td>Streaks that reset punitively cause churn on the day they break</td></tr><tr><td><strong>Offline / passive progression</strong></td><td>Gives a concrete reason to log in: something accumulated</td><td>If it accumulates indefinitely, there is no urgency. Cap it at roughly a day</td></tr><tr><td><strong>Log out mid-goal</strong></td><td>An unfinished objective is a stronger return hook than a completed one</td><td>Requires goals long enough to straddle sessions</td></tr><tr><td><strong>Timed events</strong></td><td>Experience events appear on your details page and users can opt in to be notified</td><td>Needs a real cadence; a dead events tab is worse than none</td></tr><tr><td><strong>Experience notifications</strong></td><td>Reaches 13+ players while they are away &mdash; milestones, friend activity, high scores</td><td>Opt-in rates depend on when you ask. Prompt after a good moment, not on join</td></tr><tr><td><strong>Rotating content</strong></td><td>A daily shop or rotating modifier makes each day different</td><td>Rotation without meaningful difference reads as padding</td></tr></tbody></table></div>
+
+<h2><span class="sec">05</span>Performance is an engagement metric</h2>
+
+<p>Roblox lists performance under engagement guidance, and the ranking mechanics explain why: a crash and
+a bounce are the same event from the algorithm's perspective. Test across devices and platforms, limit
+excessive textures and meshes, and run a community that will report bugs and crashes you cannot reproduce.</p>
+
+<p>See <a href="performance.html">Performance</a> for the specific thresholds &mdash; client CPU under 16&nbsp;ms
+for 60&nbsp;FPS, server memory under 3&nbsp;GB, and the memory-group breakdown that finds the devices failing
+in your game.</p>
+
+<h2><span class="sec">06</span>Diagnosing a session-time drop</h2>
+
+<ol>
+<li><strong>Check the date against your releases.</strong> Use the Performance dashboard's place-version
+breakdown to compare the new build against previous ones directly.</li>
+<li><strong>Check the error and performance reports.</strong> A regression in crash rate or out-of-memory
+exits will present as a session-time drop.</li>
+<li><strong>Break down by platform and OS.</strong> Mobile-only regressions are common and invisible in
+the aggregate. Roblox also offers a memory-group breakdown (&lt;2&nbsp;GB, 2&ndash;4&nbsp;GB, 4&ndash;8&nbsp;GB,
+&gt;8&nbsp;GB) for exactly this.</li>
+<li><strong>Break down by <em>When user first played</em>.</strong> If only the 0&ndash;30 day cohort dropped,
+you changed onboarding. If only older cohorts dropped, you changed something veterans relied on.</li>
+<li><strong>Check the new user first session retention curve</strong> against the previous period. It will
+tell you which minute you started losing people.</li>
+<li><strong>Only then open the onboarding funnel</strong> to find the specific step.</li>
+</ol>
+
+<div class="kpis"><div class="kpi"><span class="k alt">&lt;16 ms</span><span class="l">Client CPU time per frame needed to hold 60 FPS</span></div><div class="kpi"><span class="k">10 min</span><span class="l">Median session length worth targeting, for Creator Rewards</span></div><div class="kpi"><span class="k">5 min</span><span class="l">Roblox's stated deadline for a player to reach the fun</span></div></div>
+<div class="pagenav"><a href="tiers.html"><span>&larr; Previous</span>What actually matters</a><a href="retention.html"><span>Next &rarr;</span>Retention</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

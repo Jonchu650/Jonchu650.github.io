@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instrumentation &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="AnalyticsService in full: onboarding and shop funnels, economy events, custom events and custom fields — with working Luau and the rate limits that matter.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Instrumentation</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html" aria-current="page"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 09 &nbsp;&middot;&nbsp; Practice</p><h1>Instrumentation</h1><p class="standfirst">The only high-value analytics surface available to a game with no players yet. Three event types, all free, all server-side, and all of them unlock dashboards you cannot otherwise see.</p></header>
+
+<div class="toc"><div class="tl">On this page</div><ol><li><a href="#rules">The three rules</a></li><li><a href="#funnels">Funnel events</a></li><li><a href="#economy">Economy events</a></li><li><a href="#custom">Custom events</a></li><li><a href="#fields">Custom fields</a></li><li><a href="#limits">Limits</a></li><li><a href="#exploit">Protecting your data from exploiters</a></li><li><a href="#segments">Reading segments at runtime</a></li><li><a href="#kit">The day-one instrumentation kit</a></li></ol></div>
+
+<h2><span class="sec">01</span>The three rules</h2>
+
+<div id="rules"></div>
+
+<div class="note trap"><span class="tag">Non-negotiable</span><p><strong>Events can only be sent from the server, and only from a published game.</strong> They cannot be sent from the client, and they cannot be sent from Studio. If you are testing in Studio and seeing nothing on the dashboard, this is why. Data is aggregated daily, so allow up to 24 hours for charts to populate.</p></div>
+
+<div class="table-scroll"><table><thead><tr><th>Event type</th><th>Unlocks</th><th>Answers</th></tr></thead><tbody><tr><td><strong>Funnel events</strong></td><td>The Funnels page</td><td>Where do players drop out of onboarding, progression or checkout?</td></tr><tr><td><strong>Economy events</strong></td><td>The Economy page</td><td>Where do players earn and spend resources, and is the economy inflating?</td></tr><tr><td><strong>Custom events</strong></td><td>The Explore page</td><td>Anything specific to your game &mdash; feature adoption, weapon balance, map preference</td></tr></tbody><caption>All three are free, and none has a DAU threshold. Events remain visible on the dashboard and roll off automatically 90 days after the last data is received.</caption></table></div>
+
+<h2><span class="sec">02</span>Funnel events</h2>
+
+<p id="funnels">A funnel is a sequence of steps with a drop-off rate between each. Roblox supports two
+shapes, and picking the wrong one is the most common implementation mistake.</p>
+
+<h3>One-time funnels &mdash; onboarding</h3>
+<p>For conversions that happen once per player. No session ID needed. This is where you should start:
+onboarding is where most games lose most of their users.</p>
+
+<pre><code data-lang="lua"><span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+
+<span class="cm">-- Log the first step of the first-time user experience</span>
+AnalyticsService:LogOnboardingFunnelStepEvent(
+    player,
+    1,               <span class="cm">-- Step number</span>
+    <span class="st">"In Farm"</span>        <span class="cm">-- Step name</span>
+)
+
+<span class="cm">-- Log the second step</span>
+AnalyticsService:LogOnboardingFunnelStepEvent(
+    player,
+    2,
+    <span class="st">"Plant Seed"</span>
+)</code></pre>
+
+<p>To start the funnel the moment someone joins, log step 1 on <code>PlayerAdded</code>:</p>
+
+<pre><code data-lang="lua"><span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+<span class="kw">local</span> Players = game:GetService(<span class="st">"Players"</span>)
+
+Players.PlayerAdded:Connect(<span class="kw">function</span>(player)
+    AnalyticsService:LogOnboardingFunnelStepEvent(player, 1, <span class="st">"Player Joined"</span>)
+<span class="kw">end</span>)</code></pre>
+
+<h3>Recurring funnels &mdash; shop, upgrades</h3>
+<p>For conversions that happen many times per player. These need a <code>funnelSessionId</code> to keep
+separate attempts apart.</p>
+
+<pre><code data-lang="lua"><span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+<span class="kw">local</span> HttpService = game:GetService(<span class="st">"HttpService"</span>)
+
+<span class="kw">local</span> funnelSessionId = HttpService:GenerateGUID()
+
+AnalyticsService:LogFunnelStepEvent(
+    player,
+    <span class="st">"ArmoryCheckout"</span>,   <span class="cm">-- Funnel name, groups the steps together</span>
+    funnelSessionId,     <span class="cm">-- Unique ID for this checkout attempt</span>
+    1,                   <span class="cm">-- Step number</span>
+    <span class="st">"Opened Store"</span>      <span class="cm">-- Step name</span>
+)
+
+AnalyticsService:LogFunnelStepEvent(player, <span class="st">"ArmoryCheckout"</span>, funnelSessionId, 2, <span class="st">"Viewed Item"</span>)
+AnalyticsService:LogFunnelStepEvent(player, <span class="st">"ArmoryCheckout"</span>, funnelSessionId, 3, <span class="st">"Added to Cart"</span>)</code></pre>
+
+<div class="table-scroll"><table><thead><tr><th>Funnel shape</th><th>Use a funnelSessionId?</th><th>What to use as the ID</th></tr></thead><tbody><tr><td>One-time (onboarding)</td><td>No &mdash; it only happens once per player</td><td>&mdash;</td></tr><tr><td>Store / checkout</td><td>Yes</td><td>A fresh GUID each time the shop opens</td></tr><tr><td>Item upgrade paths</td><td>Yes</td><td>A stable composite key, e.g. <code>&lt;playerId&gt;-&lt;itemId&gt;</code></td></tr></tbody><caption>Roblox tracks only the 10 most recent unique funnelSessionId values per user per funnel. Reusing an older one starts a new session.</caption></table></div>
+
+<h4>Behaviour you should know before you design a funnel</h4>
+<ul class="checklist"><li><strong>Repeated steps are ignored.</strong> Only the first instance of a step counts. Disconnects and reconnects need no special handling for one-time funnels. But repeats still count toward your rate limit.</li><li><strong>Skipped steps auto-complete.</strong> Log step 3 without 1 or 2 and the funnel marks 1 and 2 as done. Useful, but it means a bug that skips a step will silently hide a drop-off.</li><li><strong>Filters apply only to the first step.</strong> This prevents double-counting when a player switches device mid-funnel &mdash; the funnel is attributed to whatever device they entered on.</li><li><strong>Funnels display by cohort.</strong> A player who enters on 6/19 belongs to the 6/19 cohort even if they finish on 6/20.</li><li><strong>Changing steps splits your data.</strong> After editing a funnel, set the date range to start from the edit date. Roblox warns you on the affected step if your range spans a change.</li><li><strong>Be consistent about when you log.</strong> Roblox recommends logging <em>after</em> a player completes a step, and using names you will still understand in three months.</li></ul>
+
+<div class="note win"><span class="tag">The one funnel every game should have</span><p>Onboarding, 4&ndash;6 steps, from <code>PlayerAdded</code> through the first complete pass of your core loop. In Roblox's own worked example the funnel revealed a <strong>70% drop</strong> between &ldquo;In Farm&rdquo; and &ldquo;Plant Seed&rdquo; &mdash; players arrived and did not know what to do. The fix was contextual prompts above the flowerpots. That is a twenty-minute change found by a twenty-minute instrumentation job.</p></div>
+
+<h2><span class="sec">03</span>Economy events</h2>
+
+<p id="economy">Every place a player gains or loses a resource is a <strong>source</strong> or a
+<strong>sink</strong>. Log both and the Economy dashboard becomes available.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Transaction type</th><th>Direction</th><th>Example</th></tr></thead><tbody><tr><td><code>IAP</code></td><td>Source</td><td>Robux exchanged for resources &mdash; a starter pack</td></tr><tr><td><code>TimedReward</code></td><td>Source</td><td>Daily bonus</td></tr><tr><td><code>Onboarding</code></td><td>Source</td><td>Welcome bonus</td></tr><tr><td><code>Shop</code></td><td>Source or sink</td><td>Trading resources in the shop</td></tr><tr><td><code>Gameplay</code></td><td>Source or sink</td><td>Quest completion; spending to play</td></tr><tr><td><code>ContextualPurchase</code></td><td>Sink</td><td>An impulse buy &mdash; extra lives</td></tr></tbody><caption>These are the defaults and they appear on the dashboard as-is. You can supply your own transaction type names, but start with these — after 20 unique types, the rest are grouped as “Other”.</caption></table></div>
+
+<pre><code data-lang="lua"><span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+
+<span class="cm">-- SOURCE: player earns 50 coins for finishing a level</span>
+AnalyticsService:LogEconomyEvent(
+    player,
+    Enum.AnalyticsEconomyFlowType.Source,
+    <span class="st">"Coins"</span>,     <span class="cm">-- Currency name</span>
+    50,           <span class="cm">-- Amount earned</span>
+    100,          <span class="cm">-- Balance AFTER the transaction</span>
+    Enum.AnalyticsEconomyTransactionType.Gameplay.Name
+)
+
+<span class="cm">-- SINK: player spends 80 coins on an upgrade</span>
+AnalyticsService:LogEconomyEvent(
+    player,
+    Enum.AnalyticsEconomyFlowType.Sink,
+    <span class="st">"Coins"</span>,
+    80,           <span class="cm">-- Cost -- always POSITIVE, even for a sink</span>
+    20,           <span class="cm">-- Balance after</span>
+    Enum.AnalyticsEconomyTransactionType.Shop.Name,
+    <span class="st">"DoubleJumpUpgrade"</span>   <span class="cm">-- Item SKU (optional)</span>
+)
+
+<span class="cm">-- SOURCE via Robux: a 1000-coin bundle purchase</span>
+AnalyticsService:LogEconomyEvent(
+    player,
+    Enum.AnalyticsEconomyFlowType.Source,
+    <span class="st">"Coins"</span>,
+    1000,
+    1020,
+    Enum.AnalyticsEconomyTransactionType.IAP.Name,
+    <span class="st">"1000CoinBundle"</span>
+)</code></pre>
+
+<div class="note"><span class="tag">Two details that cause bad data</span><p><strong>Amounts are always positive.</strong> Even for sinks. The dashboard renders sinks as negative for you.</p><p><strong>The fifth argument is the balance <em>after</em> the transaction,</strong> not before. Get this wrong and your average wallet balance chart is meaningless.</p></div>
+
+<h3>Reading the Economy dashboard</h3>
+<div class="cards"><div class="card"><p class="ct">Total sources and sinks by category</p><p class="cd">Sources minus sinks should sit close to zero. If the net total is growing, your economy is inflating and you need more sinks.</p></div><div class="card"><p class="ct">Average wallet balance</p><p class="cd">Shown for all players, payers and non-payers. Rising balances — especially among payers — mean players have money and nothing they want to buy.</p></div><div class="card"><p class="ct">Top sources and sinks</p><p class="cd">If players are not sourcing from in-app purchases, your prices are too high or the options are wrong. If a resource has no meaningful sinks, add some.</p></div></div>
+
+<h2><span class="sec">04</span>Custom events</h2>
+
+<p id="custom">Anything else you want to count. Two shapes: counters, and events with values.</p>
+
+<pre><code data-lang="lua"><span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+
+<span class="cm">-- Counter: a single action, no value</span>
+AnalyticsService:LogCustomEvent(player, <span class="st">"MissionStarted"</span>)
+
+<span class="cm">-- Event with a value: quantitative data</span>
+AnalyticsService:LogCustomEvent(
+    player,
+    <span class="st">"MissionCompletedDuration"</span>,
+    120   <span class="cm">-- seconds</span>
+)</code></pre>
+
+<p>Counters are treated as events with a value of <code>1</code>, so max, min and average will always be 1
+and the sum equals the event count. Every event automatically tracks both event count and unique user
+count.</p>
+
+<p><strong>Available aggregations:</strong> count, count unique user, average value, sum value, min value,
+max value, and average value per user &mdash; all selectable on the Explore page.</p>
+
+<div class="note key"><span class="tag">Batch values to stay under the rate limit</span><p>Sending one event with a value of 10 is far better than sending ten events. &ldquo;10 zombies killed&rdquo; instead of &ldquo;zombie killed&rdquo; ten times. This is the single most effective way to keep a busy game inside its request budget.</p></div>
+
+<h2><span class="sec">05</span>Custom fields</h2>
+
+<p id="fields">Up to three dimensions you can break down and filter every funnel, economy and custom
+event by. Values must be strings.</p>
+
+<pre><code data-lang="lua">AnalyticsService:LogEconomyEvent(
+    player,
+    Enum.AnalyticsEconomyFlowType.Sink,
+    <span class="st">"Coins"</span>, 80, 20,
+    Enum.AnalyticsEconomyTransactionType.Shop.Name,
+    <span class="st">"Obsidian Sword"</span>,
+    {
+        [Enum.AnalyticsCustomFieldKeys.CustomField01.Name] = <span class="st">"Category - Weapon"</span>,
+        [Enum.AnalyticsCustomFieldKeys.CustomField02.Name] = <span class="st">"Class - Warrior"</span>,
+        [Enum.AnalyticsCustomFieldKeys.CustomField03.Name] = <span class="st">"Level - 10"</span>,
+    }
+)</code></pre>
+
+<div class="note win"><span class="tag">Use custom fields instead of event names. Always.</span><p>Event names are capped at 100 and have a much tighter cardinality limit than custom fields, which allow 8,000 unique combinations. So instead of <code>PlantCabbage</code>, <code>PlantTurnip</code> and <code>PlantPepper</code> as three events, log one <code>PlantSeed</code> event with a custom field of <code>Plant - Cabbage</code> and so on.</p><p>You get the total <em>and</em> the per-type comparison in a single visualisation, and you have spent one of your hundred event names instead of three. The same logic applies to economy currencies: one <code>XP</code> currency with a class custom field, not <code>WarriorXP</code>, <code>MageXP</code>, <code>PaladinXP</code>.</p></div>
+
+<p>Including the dimension name inside the value &mdash; <code>"Class - Warrior"</code> rather than
+<code>"Warrior"</code> &mdash; is not required, but it makes charts readable months later when you have
+forgotten which field was which.</p>
+
+<h2><span class="sec">06</span>Limits</h2>
+
+<div id="limits"></div>
+
+<div class="table-scroll"><table><thead><tr><th>Scope</th><th>Limit</th><th class="num">Maximum</th></tr></thead><tbody><tr><td><strong>Global</strong></td><td>AnalyticsService requests per minute</td><td class="num"><code>120 + (20 &times; CCU)</code></td></tr><tr><td>All event types</td><td>Number of custom fields</td><td class="num">3</td></tr><tr><td>All event types</td><td>Unique values across all custom fields</td><td class="num">Unlimited &mdash; grouped as &ldquo;Other&rdquo; after 8,000 combined</td></tr><tr><td>Economy</td><td>Resource types</td><td class="num">10</td></tr><tr><td>Economy</td><td>Transaction types</td><td class="num">Unlimited &mdash; grouped after 20</td></tr><tr><td>Economy</td><td>Item SKUs</td><td class="num">Unlimited &mdash; grouped after 100</td></tr><tr><td>Funnel</td><td>Number of funnels</td><td class="num">10</td></tr><tr><td>Funnel</td><td>Steps per funnel</td><td class="num">100</td></tr><tr><td>Custom</td><td>Event names</td><td class="num">100</td></tr></tbody><caption>Limits reset daily; stop sending and you can send again the next day. Data rolls off 90 days after the last event received.</caption></table></div>
+
+<p>The global rate limit scales with concurrency, which means <strong>a small game is proportionally more
+constrained than a large one.</strong> At 10 CCU you have 320 requests per minute across your whole game.
+Budget accordingly: batch values, do not log high-frequency gameplay events per-occurrence, and remember
+that ignored repeated funnel steps still consume quota.</p>
+
+<h2><span class="sec">07</span>Protecting your data from exploiters</h2>
+
+<p id="exploit">Events are server-side, but the <em>trigger</em> usually is not. If a client tells the server
+&ldquo;I completed step 7,&rdquo; an exploiter can tell it anything. Validate before logging.</p>
+
+<pre><code data-lang="lua"><span class="cm">-- Server</span>
+<span class="kw">local</span> AnalyticsService = game:GetService(<span class="st">"AnalyticsService"</span>)
+<span class="kw">local</span> ReplicatedStorage = game:GetService(<span class="st">"ReplicatedStorage"</span>)
+<span class="kw">local</span> onboardingEvent = ReplicatedStorage:WaitForChild(<span class="st">"OnboardingEvent"</span>)
+
+<span class="kw">local</span> maxStep = 3
+
+<span class="kw">local function</span> onPlayerEventFired(player: Player, args: { step: number })
+    <span class="kw">local</span> step = args.step
+    <span class="kw">if</span> step &gt; maxStep <span class="kw">then</span>
+        warn(`Invalid tutorial step {step} received from client.`)
+        <span class="kw">return</span>
+    <span class="kw">end</span>
+    AnalyticsService:LogOnboardingFunnelStepEvent(player, step)
+<span class="kw">end</span>
+
+onboardingEvent.OnServerEvent:Connect(onPlayerEventFired)</code></pre>
+
+<p>Range-check step numbers, verify the player is actually in the state the step implies, and where you
+can, derive the event from server-authoritative state rather than a client message at all.</p>
+
+<h2><span class="sec">08</span>Reading segments at runtime</h2>
+
+<p id="segments"><code>AnalyticsService:GetPlayerSegmentsAsync()</code> lets you query a player's analytics
+segments <em>inside</em> your game, so you can adapt gameplay per player.</p>
+
+<div class="placard"><div class="placard-top"><h3>GetPlayerSegmentsAsync</h3><div><span class="chip rank-2">Runtime</span></div></div><p class="def">Returns segment information for a player — spending behaviour, account age in your game, and more.</p><dl><dt>Use case</dt><dd>Show lower-cost starter items to players who have never spent; show bundles to prior purchasers</dd><dt>Use case</dt><dd>Give extra tooltips and simplified content to players in their first 30 days; point experienced players at endgame content</dd><dt>Caution</dt><dd>Personalising <em>prices</em> is a different thing from personalising <em>offers</em>. Keep it to relevance, not discrimination</dd></dl></div>
+
+<h2><span class="sec">09</span>The day-one instrumentation kit</h2>
+
+<p id="kit">If you are shipping a game and want the minimum viable analytics setup, this is it. It takes
+an afternoon and every piece of it earns out.</p>
+
+<ul class="checklist"><li><strong>Onboarding funnel, 4&ndash;6 steps.</strong> Step 1 on <code>PlayerAdded</code>, final step on the first complete core-loop cycle.</li><li><strong>Shop funnel</strong> with a GUID <code>funnelSessionId</code>: opened shop &rarr; viewed item &rarr; prompted purchase &rarr; completed.</li><li><strong>Economy events on every source and sink</strong> of your primary currency, with correct post-transaction balances.</li><li><strong>A progression custom event</strong> fired on level-up or tier-up, with the level as a custom field.</li><li><strong>A core-loop custom event</strong> fired on each completion of your central action, with the variant as a custom field.</li><li><strong>A session-length custom event</strong> logged on player removal, with the duration as the value &mdash; this gives you the distribution the dashboard will not.</li><li><strong>Custom field 1 reserved for content variant</strong> (map, class, pet type), so every chart can be split by it.</li><li><strong>Server-side validation</strong> on anything the client triggers.</li></ul>
+
+<div class="note"><span class="tag">Why this specific list</span><p>Together these five events answer the questions behind six of the eight ranking signals: where new players quit, whether the loop is rewarding, whether progression paces correctly, whether purchases complete, whether your economy inflates, and what your session-length distribution actually looks like. Everything else can wait until a number moves and you need to know why.</p></div>
+<div class="pagenav"><a href="audience.html"><span>&larr; Previous</span>Audience & feedback</a><a href="experiments.html"><span>Next &rarr;</span>Experiments & configs</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

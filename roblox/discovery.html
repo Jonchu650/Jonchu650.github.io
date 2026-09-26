@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The algorithm &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="How Roblox's Recommended for You algorithm retrieves and ranks games, the eight signals it uses, and what causes exposure to be suppressed.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">The algorithm</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html" aria-current="page"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 01 &nbsp;&middot;&nbsp; The machine</p><h1>How Roblox decides who sees your game</h1><p class="standfirst">Two stages, eight signals, one hard rule about which players count. Everything you do to grow a game is ultimately an attempt to move a number on this page.</p></header>
+
+<div class="toc"><div class="tl">On this page</div><ol><li><a href="#stages">Retrieval and ranking</a></li><li><a href="#organic">The organic-only rule</a></li><li><a href="#signals">The eight signals, in depth</a></li><li><a href="#explore">Explore and expand</a></li><li><a href="#swings">Why impressions move</a></li><li><a href="#suppress">What suppresses exposure</a></li><li><a href="#surfaces">The other discovery surfaces</a></li><li><a href="#dashboard">Using the Home Recommendations dashboard</a></li></ol></div>
+
+<h2><span class="sec">01</span>Retrieval and ranking</h2>
+<p id="stages">The <strong>Recommended for You</strong> sort on Home is where the large majority of Roblox
+players find new games. It runs in two stages.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Stage</th><th>What happens</th><th>What influences it</th></tr></thead><tbody><tr><td><strong>1. Retrieval</strong></td><td>The algorithm narrows millions of games down to a candidate set this particular user might enjoy.</td><td>Broad signals of engagement, retention and monetization. Crucially, <em>any</em> traffic source can get you considered here &mdash; sponsored ads, curation, search, charts, friends, teleports, notifications and off-platform sharing all accelerate consideration. Even a small number of players signals that a game is worth testing more widely.</td></tr><tr><td><strong>2. Ranking</strong></td><td>The candidate set is ordered personally for that user. How far your game travels is decided here.</td><td>The eight signals below &mdash; and <strong>only</strong> as measured on users who organically arrived from Recommended for You.</td></tr></tbody><caption>This asymmetry is the most useful structural fact about the system. Paid and social traffic buys you an audition; only organic behaviour wins the part.</caption></table></div>
+
+<h2><span class="sec">02</span>The organic-only rule</h2>
+<p id="organic">Roblox states it plainly: it <em>does not</em> count the engagement, monetization or
+retention of users first acquired from ads, curation, friends, search, social media or any other source
+in the ranking stage.</p>
+
+<p>Three consequences follow, and most creators get at least one of them wrong:</p>
+
+<ul>
+<li><strong>Your dashboard averages and your ranking inputs are different numbers.</strong> Your overall
+D1 retention blends every source. The algorithm reads a subset. Use the Home Recommendations tab in the
+Acquisition dashboard to see the subset that matters.</li>
+<li><strong>A successful ad campaign can coincide with falling impressions.</strong> It is not a
+contradiction. The ads brought players who do not count; if organic behaviour was unchanged or worse,
+organic distribution does not grow.</li>
+<li><strong>Paid traffic is for getting <em>retrieved</em>, and for revenue.</strong> Both are legitimate
+reasons to buy traffic. &ldquo;Boosting the algorithm&rdquo; is not one of them.</li>
+</ul>
+
+<div class="note key"><span class="tag">The one exception worth knowing</span><p>Retrieval genuinely does respond to outside traffic. For a brand-new game with no history, a coordinated push &mdash; a few creators, a TikTok that lands, a sponsored burst &mdash; is how you get into the candidate pool at all. The mistake is doing this <em>before</em> the organic behaviour can survive the audition.</p></div>
+
+<h2><span class="sec">03</span>The eight signals, in depth</h2>
+<p id="signals">Listed in Roblox's published priority order. Each entry gives the definition, what moving
+it actually requires, and the trap specific to it.</p>
+
+<div class="placard"><div class="placard-top"><h3>01 &nbsp; Play through rate</h3><div><span class="chip rank">Most important</span><span class="chip rank-0">No time segments</span></div></div><p class="def">The rate at which users play your game after seeing it in the Recommended for You sort.</p><dl><dt>Measured on</dt><dd>Impressions from Home recommendations only</dd><dt>Moved by</dt><dd>Thumbnail, icon, title, and how well all three predict the actual game</dd><dt>Levers</dt><dd>Thumbnail personalisation (2&ndash;5 active thumbnails), icon clarity, a title that states the loop</dd><dt>Trap</dt><dd>It <em>drops temporarily</em> whenever impressions rise, because you are being shown to a less-targeted audience. Do not panic-revert a thumbnail during a growth spike.</dd></dl></div>
+<p>This is the only signal decided before anyone plays. Roblox reports that games using thumbnail
+personalisation saw an average <strong>+8.5% qualified play through rate</strong>, with some games up
+<strong>+50%</strong>. Personalisation only activates with two or more active thumbnails, and Roblox
+recommends keeping several active permanently rather than picking a winner &mdash; the algorithm keeps
+re-testing as audiences shift.</p>
+
+<div class="placard"><div class="placard-top"><h3>02 &nbsp; First play bounce rate</h3><div><span class="chip rank">Most important</span><span class="chip neg">Negative signal</span></div></div><p class="def">The rate at which users leave your game after a short first session. High is bad.</p><dl><dt>Measured in</dt><dd>Two buckets: under 60 seconds, and 61&ndash;180 seconds</dd><dt>Moved by</dt><dd>Load time, the first thing on screen, the first 30 seconds of gameplay</dd><dt>Levers</dt><dd>Cut load time, cut the tutorial, put the core loop's payoff inside the first minute</dd><dt>Trap</dt><dd>Under-60s bounces are usually <em>technical</em>, not creative &mdash; slow streaming, a broken first frame, a crash on low-memory Android.</dd></dl></div>
+<p>Split your thinking by bucket. A player who leaves in under a minute rarely saw your game; they saw a
+loading screen, a wall of UI, or a device that could not handle it. A player who leaves at two minutes
+saw it and was not convinced. The two failures have completely different fixes, which is exactly why
+Roblox measures them separately.</p>
+
+<div class="placard"><div class="placard-top"><h3>03 &nbsp; Play days per user</h3><div><span class="chip rank">Most important</span></div></div><p class="def">The average number of unique days users engage with your game.</p><dl><dt>Segments</dt><dd>D1 average &middot; D2&ndash;7 average &middot; D8&ndash;28 average</dd><dt>Moved by</dt><dd>Reasons to return: daily rewards, timed events, progression that resumes, social obligation</dd><dt>Levers</dt><dd>Daily login value, offline progression, unfinished goals at logout, experience notifications</dd><dt>Trap</dt><dd>Counts <em>days</em>, not sessions. Three sessions in one day is one play day. Spreading engagement across days beats deepening it within a day.</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>04 &nbsp; Playtime per user</h3><div><span class="chip rank">Most important</span><span class="chip rank-0">60 min/day cap</span></div></div><p class="def">The average amount of time users spend in your game, capped at 60 minutes per user, per game, per day.</p><dl><dt>Segments</dt><dd>D1 average &middot; D2&ndash;7 average &middot; D8&ndash;28 average</dd><dt>Moved by</dt><dd>Session structure, pacing, whether there is a natural next thing to do</dd><dt>Levers</dt><dd>Goals that end just past the current session, group content, queues that fill quickly</dd><dt>Trap</dt><dd>The 60-minute cap means grinding your most devoted players harder is worth <strong>nothing</strong> above the cap. Every minute of value is in moving a 4-minute player to 15, not a 90-minute player to 120.</dd></dl></div>
+
+<div class="note win"><span class="tag">The cap is a strategy</span><p>The 60-minute cap converts &ldquo;maximise engagement&rdquo; into a much more specific and much more achievable instruction: <strong>raise the floor, not the ceiling.</strong> Find the distribution of session lengths, not the average. Your work is at the bottom of that distribution.</p></div>
+
+<div class="placard"><div class="placard-top"><h3>05 &nbsp; Intentional co-play days per user</h3><div><span class="chip rank-2">Important</span></div></div><p class="def">The average number of unique days users come back to play your game with friends &mdash; via join, invites, or private servers.</p><dl><dt>Segments</dt><dd>D1 &middot; D2&ndash;7 &middot; D8&ndash;28</dd><dt>Moved by</dt><dd>Whether playing together is better than playing alone, and whether the game says so</dd><dt>Levers</dt><dd>In-game invite prompts, friend-bonus mechanics, shared objectives, private servers, referral rewards</dd><dt>Trap</dt><dd>&ldquo;Intentional&rdquo; is doing work in that name. Two strangers in the same public server is not co-play. A join, an invite, or a private server is.</dd></dl></div>
+<p>This is the most under-exploited signal on the list for solo developers, because it is the one you can
+move with UI rather than content. Roblox ships a player invite prompt API and a friend referral reward
+system specifically for it.</p>
+
+<div class="placard"><div class="placard-top"><h3>06 &nbsp; Qualified play sessions per user</h3><div><span class="chip rank-2">Important</span></div></div><p class="def">The average number of qualified play sessions per user who clicked through from Home recommendations. A qualified play is a meaningful session, filtering out accidental clicks and quick bounces.</p><dl><dt>Segments</dt><dd>D1 &middot; D2&ndash;7 &middot; D8&ndash;28</dd><dt>Moved by</dt><dd>The same things that move bounce rate, plus reasons to start a <em>second</em> session</dd><dt>Levers</dt><dd>Anything that turns a first session into a habit inside the first week</dd><dt>Trap</dt><dd>Roblox does not publish the qualifying threshold. Community estimates circulate; treat them as folklore. Optimise for &ldquo;obviously a real session,&rdquo; not for a number someone guessed.</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>07 &nbsp; Spend days per user</h3><div><span class="chip rank-2">Important</span></div></div><p class="def">The average number of unique days on which users spend Robux in your game.</p><dl><dt>Segments</dt><dd>D1 &middot; D2&ndash;7 &middot; D8&ndash;28</dd><dt>Moved by</dt><dd>How often there is something worth buying, at a price a normal player can reach</dd><dt>Levers</dt><dd>Cheap consumables, daily-refreshing offers, low-price entry products, first-purchase discounts</dd><dt>Trap</dt><dd>A single 1,000&nbsp;Robux gamepass generates one spend day. Ten 80&nbsp;Robux consumables across ten days generate ten. Price ladders are an algorithm strategy, not just a revenue strategy.</dd></dl></div>
+
+<div class="placard"><div class="placard-top"><h3>08 &nbsp; Robux spent per user</h3><div><span class="chip rank-2">Important</span></div></div><p class="def">The average amount of Robux users spend in your game.</p><dl><dt>Segments</dt><dd>D1 &middot; D2&ndash;7 &middot; D8&ndash;28</dd><dt>Moved by</dt><dd>Payer conversion and ARPPU together</dd><dt>Levers</dt><dd>See <a href='monetization.html'>Monetization</a></dd><dt>Trap</dt><dd>It is a per-user average, so whales are diluted by everyone who spends nothing. Broad conversion moves this more reliably than deep spending does.</dd></dl></div>
+
+<h2><span class="sec">04</span>Explore and expand</h2>
+<p id="explore">Roblox describes the recommendation system as running <strong>explore</strong> and
+<strong>expand</strong> phases. After a content update you may see a spike in new users from
+recommendations &mdash; that is explore. If that new cohort engages and monetizes well, Roblox keeps
+recommending you to more cohorts like them &mdash; that is expand.</p>
+
+<p>Practical reading: <strong>every content update is an audition, and the audience judging it is a
+cohort you have never served before.</strong> This is why updates sometimes crater retention even when
+long-time players love them. New users were sampled, the update was aimed at veterans, the cohort
+bounced. Segment your post-update numbers by <em>When user first played</em> before you conclude anything.</p>
+
+<div class="note"><span class="tag">When distribution increases, you settle into a new baseline</span><p>Roblox warns explicitly that signals fluctuate while the algorithm works out who your game suits, before stabilising. Give a growth spike two to three weeks before treating its numbers as the truth. Acting on week-one data during an expansion phase is how creators talk themselves out of updates that were working.</p></div>
+
+<h2><span class="sec">05</span>Why impressions move</h2>
+<p id="swings">Roblox lists four causes. Only one of them is you.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Cause</th><th>What it looks like</th><th>What to do</th></tr></thead><tbody><tr><td><strong>What you do</strong></td><td>Impression change follows an update, a metadata change, or a signal moving</td><td>Check the Home Recommendation signal charts across D1, D2&ndash;7 and D8&ndash;28</td></tr><tr><td><strong>What Roblox does</strong></td><td>Platform-wide algorithm changes, with no corresponding change in your signals</td><td>Check whether similar games moved too. Do not chase it</td></tr><tr><td><strong>Total Home traffic</strong></td><td>Weekly seasonality peaking Saturday, plus summer, back-to-school and holiday cycles</td><td>Compare week-over-week and year-over-year, never day-over-day</td></tr><tr><td><strong>Other games</strong></td><td>Your signals are flat, impressions fall anyway &mdash; someone else got better</td><td>Nothing defensive. The only answer is to improve your own per-user numbers</td></tr></tbody></table></div>
+
+<h2><span class="sec">06</span>What suppresses exposure</h2>
+<p id="suppress">Roblox names three content-quality issues that reduce visibility on Home and in search,
+independent of your metrics.</p>
+
+<div class="cards"><div class="card"><span class="cn">Issue 01</span><p class="ct">Leading with giveaways</p><p class="cd">Metadata implying a monetary reward is deprioritised. A game titled &ldquo;Robux! Play now!&rdquo; gets less exposure because the title leads with money instead of gameplay.</p></div><div class="card"><span class="cn">Issue 02</span><p class="ct">Mismatched metadata</p><p class="cd">Thumbnails and titles that do not match the actual game are not recommended and rank lower in search. Dinosaurs on the tile, a generic obby in the game.</p></div><div class="card"><span class="cn">Issue 03</span><p class="ct">Non-unique games</p><p class="cd">Metadata and place files closely resembling existing games are no longer prioritised. Cloning a trending title's name and visuals is now a penalty, not a shortcut.</p></div></div>
+
+<div class="note trap"><span class="tag">Check whether you are flagged</span><p>Games with reduced exposure show a banner on the Creator Dashboard that updates daily. Roblox reclassifies content quality with every update, so the penalty is recoverable &mdash; align with the best practices and republish. If you believe it is wrong, file a Bug Report through Support with your Universe ID.</p></div>
+
+<h3>The line between trend-following and cloning</h3>
+<p>Roblox's own guidance is to <em>add your own spin to existing trends</em> in title, images, description
+and in-game content. Building in a proven genre is fine and always has been. Shipping something whose
+name and tile could be confused for the game it is imitating is now measurably costly.</p>
+
+<h2><span class="sec">07</span>The other discovery surfaces</h2>
+<p id="surfaces">Recommended for You is the biggest, not the only one.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Surface</th><th>How it works</th><th>What you control</th></tr></thead><tbody><tr><td><strong>Continue Playing</strong></td><td>Home sort for games the user has played before</td><td>Retention. Nothing else</td></tr><tr><td><strong>Friends</strong></td><td>Friend activity on Home</td><td>Co-play design, invite prompts, referral rewards</td></tr><tr><td><strong>Search</strong></td><td>Now semantic &mdash; natural-language queries like &ldquo;food games&rdquo; work across all supported languages</td><td>Accurate, descriptive metadata. Keyword stuffing is counterproductive</td></tr><tr><td><strong>Discover / charts</strong></td><td>Top and trending sorts, refreshed to surface a wider range of games</td><td>Growth velocity and absolute scale</td></tr><tr><td><strong>Standout Games</strong></td><td>Hand-curated by Roblox: novel mechanics, distinctive visuals, or an under-represented genre</td><td>Originality. This is the sort that rewards <em>not</em> copying</td></tr><tr><td><strong>Sponsored</strong></td><td>Paid placement via Ads Manager &mdash; sponsored experiences, search ads, portal ads</td><td>Budget, targeting, creative</td></tr><tr><td><strong>Live Events</strong></td><td>Limited-time platform events with quests and rewards</td><td>Participation, when offered</td></tr><tr><td><strong>Notifications</strong></td><td>Personalised pushes for milestones, high scores, friend activity</td><td>Experience notifications API, plus in-game opt-in prompts</td></tr><tr><td><strong>Game details page</strong></td><td>Where high-intent users decide</td><td>Thumbnails, description, events, passes, subscriptions, social links, community</td></tr></tbody></table></div>
+
+<h2><span class="sec">08</span>Using the Home Recommendations dashboard</h2>
+<p id="dashboard"><strong>Analytics &rsaquo; Acquisition &rsaquo; Home Recommendations</strong> is the only place
+the ranking inputs are visible. Work it in this order when impressions drop:</p>
+
+<ol>
+<li><strong>Confirm the drop is real</strong> and date it against your release history and the platform's
+weekly seasonality.</li>
+<li><strong>Check the four most-important signals first.</strong> Roblox states the typical pattern
+explicitly: an impression drop usually follows a fall in play through rate, play days per user and
+playtime per user, and a rise in first play bounce rate.</li>
+<li><strong>Read all three time windows.</strong> If D1 is stable but D2&ndash;7 and D8&ndash;28 fell, your
+onboarding is fine and your <em>retention past the first day</em> broke &mdash; look at progression, not the
+tutorial.</li>
+<li><strong>If the top four are stable, move to the second tier</strong> &mdash; co-play days, qualified
+sessions, spend days, Robux spent.</li>
+<li><strong>Compare against the similar-games benchmark</strong> shown at the bottom of the page to find
+which signal is furthest below par. That is your opportunity, not your emergency.</li>
+</ol>
+
+<div class="note key"><span class="tag">Benchmarks do not feed the algorithm</span><p>Roblox says this twice in its own documentation, which suggests people keep assuming otherwise. The benchmark set exists to give you a point of comparison. Beating it does not rank you; it just tells you that a given signal is no longer your weakest link.</p></div>
+<div class="pagenav"><a href="index.html"><span>&larr; Previous</span>The rundown</a><a href="tiers.html"><span>Next &rarr;</span>What actually matters</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

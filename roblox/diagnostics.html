@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnostics &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Decision trees for the six failures behind most sudden drops in a Roblox game's impressions, retention, session time or revenue.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Diagnostics</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html" aria-current="page"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 12 &nbsp;&middot;&nbsp; Practice</p><h1>Diagnostics</h1><p class="standfirst">Something moved and you need to know why. Six decision trees, ordered by how often each cause turns out to be the real one.</p></header>
+
+<div class="note key"><span class="tag">Before any of these: the two-minute triage</span><p><strong>1. Date it.</strong> Line the change up against your publish history and Roblox's update annotations on the Performance dashboard.<br><strong>2. Check seasonality.</strong> Weekly traffic peaks Saturday and dips midweek; there are summer, back-to-school and holiday cycles. Compare week-over-week, never day-over-day.<br><strong>3. Check your filters.</strong> Dashboard filters persist across pages until you turn them off. A forgotten filter explains more &lsquo;anomalies&rsquo; than anything else on this page.</p></div>
+
+<div class="toc"><div class="tl">Six diagnostics</div><ol><li><a href="#d1">Home impressions dropped</a></li><li><a href="#d2">Retention dropped after an update</a></li><li><a href="#d3">Session time dropped</a></li><li><a href="#d4">Revenue dropped</a></li><li><a href="#d5">Play through rate dropped</a></li><li><a href="#d6">Nothing dropped, but nothing is growing</a></li></ol></div>
+
+<h2><span class="sec">01</span>Home impressions dropped</h2>
+<div id="d1"></div>
+
+<p>Go to <strong>Acquisition &rsaquo; Home Recommendations</strong>. Roblox states the usual pattern outright:
+an impression drop typically follows a fall in play through rate, play days per user and playtime per
+user, and a rise in first play bounce rate.</p>
+
+<div class="table-scroll"><table><thead><tr><th>What you see</th><th>Likely cause</th><th>Go to</th></tr></thead><tbody><tr><td><strong>Play through rate fell</strong>, everything else stable</td><td>Metadata problem &mdash; or a normal dip because impressions rose first</td><td>Check impressions <em>before</em> the PTR change. If they rose, this is expected. If not, review thumbnails and title</td></tr><tr><td><strong>Bounce rate rose</strong>, especially the &lt;60s bucket</td><td>Technical. Load time, crash, first-frame failure</td><td><a href='performance.html'>Performance</a> &mdash; break down by place version and memory group</td></tr><tr><td><strong>D1 fell, D2&ndash;7 and D8&ndash;28 stable</strong></td><td>You changed onboarding or the first session</td><td><a href='retention.html'>Retention</a> &rarr; core loop and FTUE</td></tr><tr><td><strong>D1 stable, D2&ndash;7 and D8&ndash;28 fell</strong></td><td>Progression or endgame. Veterans are leaving, new players are fine</td><td><a href='retention.html'>Retention</a> &rarr; progression system</td></tr><tr><td><strong>All signals stable</strong></td><td>Not you. Either a platform algorithm change, seasonality, or other games improved</td><td>Nothing defensive exists. Keep improving your own per-user numbers</td></tr><tr><td><strong>Everything reads zero</strong></td><td>Beta mode is enabled &mdash; games in beta are excluded from Recommended for You</td><td>Publishing settings</td></tr><tr><td><strong>A banner on the Creator Dashboard</strong></td><td>Content quality flag &mdash; giveaway-led metadata, mismatch, or non-uniqueness</td><td><a href='discovery.html#suppress'>Discovery &rarr; suppression</a></td></tr></tbody></table></div>
+
+<div class="note"><span class="tag">Do not forget the fourth cause</span><p>Roblox lists four drivers of impression change and only one is you. If your signals are flat and there is no quality banner, the honest answer is often that somebody else got better. There is no defensive move &mdash; only offence.</p></div>
+
+<h2><span class="sec">02</span>Retention dropped after an update</h2>
+<div id="d2"></div>
+
+<ol>
+<li><strong>Segment by <em>When user first played</em>.</strong> This single step resolves most cases.
+<ul>
+<li>Only the 0&ndash;30 day cohort fell &rarr; you changed the new-player experience.</li>
+<li>Only older cohorts fell &rarr; you changed something veterans depended on, or your update was aimed at
+newcomers and gave existing players nothing.</li>
+<li>Everyone fell &rarr; likely technical. Go to the performance dashboard.</li>
+</ul></li>
+<li><strong>Check whether new users spiked on the same date.</strong> A large influx of new users
+temporarily depresses retention on all three charts. Roblox calls this out as a typical and temporary
+outcome. Your retention did not get worse &mdash; your mix got more casual.</li>
+<li><strong>Check the new user first session retention curve</strong> against the previous period to find
+the minute where you started losing people.</li>
+<li><strong>Open the onboarding funnel</strong> and compare completion rates step by step, with the date
+range starting from the update. Remember to check whether you changed the funnel steps themselves &mdash;
+Roblox warns on affected steps if your range spans an edit.</li>
+<li><strong>Check error and performance reports</strong> for the same window.</li>
+</ol>
+
+<h2><span class="sec">03</span>Session time dropped</h2>
+<div id="d3"></div>
+
+<div class="table-scroll"><table><thead><tr><th>Check</th><th>What it rules in or out</th></tr></thead><tbody><tr><td>Break down by <strong>platform and OS</strong></td><td>Mobile-only regressions are common and invisible in aggregate</td></tr><tr><td>Break down by <strong>memory group</strong></td><td>&lt;2&nbsp;GB and 2&ndash;4&nbsp;GB devices failing is a memory regression</td></tr><tr><td>Break down by <strong>place version</strong></td><td>Confirms whether your latest build is responsible</td></tr><tr><td>Check <strong>crash rate and OOM exits</strong></td><td>A crash ends a session. A crash spike <em>is</em> a session-time drop</td></tr><tr><td>Check <strong>client memory usage %</strong></td><td>If a platform line approaches 100%, those players are crashing or about to</td></tr><tr><td>Check <strong>server frame rate</strong></td><td>Server FPS drops reduce client FPS and raise latency for everyone</td></tr><tr><td>Check the <strong>feedback table's device column</strong></td><td>Negative comments clustering on one platform confirms the theory in seconds</td></tr></tbody></table></div>
+
+<p>If all of that is clean, it is a design change: something you added is being skipped, or something you
+removed was holding people. Segment by cohort age and look at what changed for that group.</p>
+
+<h2><span class="sec">04</span>Revenue dropped</h2>
+<div id="d4"></div>
+
+<p>Decompose before you investigate. <code>Revenue = DAU &times; conversion &times; ARPPU</code>. Exactly one
+of the three usually moved.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Term that fell</th><th>Meaning</th><th>Where to look</th></tr></thead><tbody><tr><td><strong>DAU</strong></td><td>A traffic problem wearing a revenue costume</td><td><a href='acquisition.html'>Acquisition</a> and impressions &mdash; diagnostic 01</td></tr><tr><td><strong>Payer conversion</strong></td><td>Fewer people are starting to spend</td><td>Shop funnel, shop visibility, price of your cheapest item, whether a first-purchase offer broke</td></tr><tr><td><strong>ARPPU</strong></td><td>Spenders are going less deep</td><td>Catalogue breadth, whether a popular item was removed or nerfed, seasonal item expiry</td></tr></tbody></table></div>
+
+<h4>Then check these three</h4>
+<ul class="checklist"><li><strong>Compare against similar games.</strong> Roblox's insights panel does this for 100+ DAU games. A 21% revenue decline while similar games rose 15% is a real problem; a 21% decline while everyone fell is seasonality.</li><li><strong>Break down by Active Payer Status.</strong> If the top 15% segment collapsed, you lost whales &mdash; a retention problem among your most invested players, not a pricing problem.</li><li><strong>Check average wallet balance.</strong> Rising balances mean players have currency and nothing they want. That reads as a revenue problem and is actually a content problem.</li></ul>
+
+<h2><span class="sec">05</span>Play through rate dropped</h2>
+<div id="d5"></div>
+
+<p>First, check whether impressions rose immediately beforehand. Roblox states that PTR dips temporarily
+when impressions increase, because you are being shown to a broader, less-targeted audience. This is
+normal and it stabilises.</p>
+
+<p>If impressions did not rise:</p>
+<ul class="checklist"><li>Did you change your icon, title, thumbnails or description? Revert and observe.</li><li>Did thumbnail personalisation get switched off, or drop below two active thumbnails? It needs at least two to run.</li><li>Is there a content-quality banner on your Creator Dashboard?</li><li>Has a similar game launched with a near-identical tile? Non-uniqueness cuts both ways &mdash; you may now look like the copy.</li><li>Check PTR <em>by source</em>. A drop confined to one source is a placement change, not a creative problem.</li></ul>
+
+<h2><span class="sec">06</span>Nothing dropped, but nothing is growing</h2>
+<div id="d6"></div>
+
+<p>The most common situation, and the least well served by dashboards, because nothing is flagged as
+wrong. Work through the ladder in order and find your weakest signal relative to benchmark.</p>
+
+<div class="cards"><a class="card" href="discovery.html#dashboard"><span class="cn">Check 1</span><p class="ct">Is your weakest signal below the 50th percentile?</p><p class="cd">Compare each signal to the similar-games benchmark on the Home Recommendations page. Fix the one furthest below median — not the one you find most interesting.</p></a><a class="card" href="engagement.html"><span class="cn">Check 2</span><p class="ct">Is your bounce rate the real problem?</p><p class="cd">It is the second-highest-weighted signal and the most commonly ignored, because no dashboard puts it on the front page. Look at the under-60s bucket specifically.</p></a><a class="card" href="discovery.html#signals"><span class="cn">Check 3</span><p class="ct">Do you have any second-tier signal at all?</p><p class="cd">Many games have effectively zero co-play design and no cheap repeatable purchase. Those are two of the four second-tier signals sitting at zero.</p></a><a class="card" href="retention.html"><span class="cn">Check 4</span><p class="ct">Are you shipping on a cadence?</p><p class="cd">Roblox's published rhythm is small updates every 2–4 weeks and large ones every 2–3 months. A flat game is often just a game that stopped being updated.</p></a></div>
+
+<div class="note win"><span class="tag">The order to attack a plateau</span><p>Bounce rate first (fastest to move, second-highest weight). Then median session length toward 10 minutes. Then play days, via a return hook. Then co-play, via invite prompts. Then a cheap repeatable purchase for spend days. That sequence works because each step is cheaper than the one after it and feeds a signal the previous step did not.</p></div>
+
+<h2><span class="sec">07</span>The post-update routine</h2>
+
+<p>Roblox's own list of what to check after every update, plus the segmentation that makes it useful:</p>
+
+<ul class="checklist"><li><strong>D1 and D7 retention</strong> &mdash; segmented by <em>When user first played</em></li><li><strong>Average session time</strong> &mdash; broken down by platform and place version</li><li><strong>Payer conversion, ARPPU and revenue</strong></li><li><strong>New users and play through rate</strong></li><li><strong>Crash rate and out-of-memory exits</strong> &mdash; against the previous place version</li><li><strong>Feedback comments</strong> from the 48 hours after release, with the device column visible</li><li><strong>The Home Recommendation signals</strong> across D1, D2&ndash;7 and D8&ndash;28, about a week later</li></ul>
+<div class="pagenav"><a href="benchmarks.html"><span>&larr; Previous</span>Benchmarks</a><a href="playbook.html"><span>Next &rarr;</span>The growth playbook</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Priorities by genre &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="How the eight ranking signals land differently across simulator, tycoon, obby, horror, RPG, PvP, social and round-based games — and what each genre should fix first.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Priorities by genre</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html" aria-current="page"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 14 &nbsp;&middot;&nbsp; Playbook</p><h1>Priorities by genre</h1><p class="standfirst">The ladder is the same for everyone. Which rungs you are naturally good at is not. Every genre has a structural strength it can coast on and a structural weakness that quietly caps it.</p></header>
+
+<div class="note key"><span class="tag">How to use this page</span><p>Find your genre, identify your structural weakness, and fix that rather than deepening the strength you already have. Because the ranking signals are averages and several of them are measured in separate D1 / D2&ndash;7 / D8&ndash;28 windows, the signal you are worst at is almost always where the cheapest distribution is hiding.</p></div>
+
+<h2><span class="sec">01</span>The comparison</h2>
+
+<figure><p class="chart-title">D1 retention by genre</p><p class="chart-sub">Promoted games sample — read as ordering, not as absolute targets</p><div class="bars"><div class="bar-row"><div class="bl">RPG</div><div class="bar-track"><div class="bar-fill " style="width:92.1%"></div></div><div class="bar-val">35%</div></div><div class="bar-row"><div class="bl">Simulator</div><div class="bar-track"><div class="bar-fill " style="width:84.2%"></div></div><div class="bar-val">32%</div></div><div class="bar-row"><div class="bl">Tycoon</div><div class="bar-track"><div class="bar-fill " style="width:78.9%"></div></div><div class="bar-val">30%</div></div><div class="bar-row"><div class="bl">Adventure</div><div class="bar-track"><div class="bar-fill " style="width:71.1%"></div></div><div class="bar-val">27%</div></div><div class="bar-row"><div class="bl">FPS / shooter</div><div class="bar-track"><div class="bar-fill " style="width:68.4%"></div></div><div class="bar-val">26%</div></div><div class="bar-row"><div class="bl">Social / hangout</div><div class="bar-track"><div class="bar-fill " style="width:63.2%"></div></div><div class="bar-val">24%</div></div><div class="bar-row"><div class="bl">Horror</div><div class="bar-track"><div class="bar-fill " style="width:57.9%"></div></div><div class="bar-val">22%</div></div><div class="bar-row"><div class="bl">Obby</div><div class="bar-track"><div class="bar-fill " style="width:47.4%"></div></div><div class="bar-val">18%</div></div></div><figcaption>BLOXG, 850+ promoted games, March 2026. Every value here sits above the platform-wide 99th percentile, because the sample is games that were already promoted. The useful information is the ordering and the gap between genres, not the numbers themselves.</figcaption></figure>
+
+<div class="table-scroll"><table><thead><tr><th>Genre</th><th>Naturally strong at</th><th>Structurally weak at</th><th>Fix first</th></tr></thead><tbody><tr><td><strong>Simulator</strong></td><td>Play days (passive progress), playtime, spend days</td><td>First play bounce &mdash; loops look identical on the tile</td><td>Make the first 30 seconds legible. Give the first collectible free</td></tr><tr><td><strong>Tycoon</strong></td><td>Playtime, play days, D7 (progression is the genre)</td><td>Co-play, and D30 once the build is complete</td><td>Endgame content and social systems; prestige or rebirth loops</td></tr><tr><td><strong>Obby</strong></td><td>Play through rate &mdash; instantly legible tile</td><td>Everything after D1. Shortest sessions, steepest decay</td><td>Play days: a reason to return. Daily stages, leaderboards, rotating courses</td></tr><tr><td><strong>Horror</strong></td><td>Co-play (fear is social), session intensity</td><td>D7 and D30 &mdash; once you know the scares, it is over</td><td>Variation: procedural elements, multiple entities, rotating maps</td></tr><tr><td><strong>RPG</strong></td><td>D7, D30, playtime, spend depth</td><td>Bounce rate &mdash; heavy onboarding, complex first session</td><td>Compress the first 5 minutes. Combat before character creation</td></tr><tr><td><strong>FPS / PvP</strong></td><td>Play days, qualified sessions, co-play</td><td>New-player bounce &mdash; skill gap is brutal at minute one</td><td>Matchmaking for new players; a short protected on-ramp</td></tr><tr><td><strong>Social / hangout</strong></td><td>Co-play days, D30, play days</td><td>Playtime per session is idle-heavy; monetization is cosmetic-only</td><td>Give a loop, not just a room. Add spend frequency via cheap cosmetics</td></tr><tr><td><strong>Tower defence / round-based</strong></td><td>Session length, co-play, clear progression</td><td>Play through rate &mdash; tiles look generic</td><td>Distinctive art direction and a title that names the fantasy</td></tr><tr><td><strong>Story / narrative</strong></td><td>Bounce rate (strong hook), D1</td><td>Play days and D30 &mdash; stories end</td><td>Episodic releases on a cadence; make the ending a hook</td></tr><tr><td><strong>Sandbox / building</strong></td><td>Playtime, D30, co-play</td><td>D1 &mdash; a blank canvas is intimidating</td><td>Templates and starter builds. Never open on an empty plot</td></tr><tr><td><strong>Racing / sports</strong></td><td>Qualified sessions, co-play</td><td>D7 &mdash; content exhausts fast</td><td>Progression through vehicles or tiers; seasonal events</td></tr><tr><td><strong>Minigame / party</strong></td><td>Co-play, play days, session length</td><td>Spend days &mdash; hard to monetise without unbalancing</td><td>Cosmetics and cheap consumables; per-round boosts</td></tr></tbody></table></div>
+
+<h2><span class="sec">02</span>The genres in detail</h2>
+
+<h3>Simulator and collect-em-up</h3>
+<p>The dominant commercial genre, and the one with the most crowded tiles. Its structural advantages are
+real: passive or offline progression gives you play days almost for free, and the collection fantasy
+naturally supports a price ladder, which feeds spend days.</p>
+<p>The structural weakness is play through rate and first-minute bounce. Fifty games in this genre share
+a visual language, so the tile does not differentiate and the first thirty seconds look like every other
+one. The two highest-return moves are a thumbnail that shows the <em>collection</em> rather than the
+environment, and handing the player their first collectible immediately &mdash; before any challenge.</p>
+<ul class="checklist"><li>Cap offline accumulation at roughly a day, so returning tomorrow specifically is rewarded</li><li>Always display the next rarity tier, so there is a visible reason not to log off</li><li>Make bases or collections visitable &mdash; this converts a solo genre into co-play signal cheaply</li><li>Add one cheap daily-refreshing consumable. Spend days is listed above Robux spent for a reason</li></ul>
+
+<h3>Obby and platformer</h3>
+<p>The clearest tile on the platform and the worst retention profile on it. Obby games convert impressions
+into plays better than almost anything else and then lose those players immediately &mdash; the genre sits
+last on D1, D7 and D30 in every dataset.</p>
+<p>Because play through rate is already strong, effectively all of your available upside is in play days
+and playtime. Treat return-visit design as the entire product problem, not a feature.</p>
+<ul class="checklist"><li>A daily stage or daily challenge, so the game is different tomorrow</li><li>Persistent progression across courses &mdash; something that carries between sessions</li><li>Leaderboards and time trials, which convert a finite course into a repeatable one</li><li>Checkpoint generosity tuned by data, not instinct: instrument each stage as a funnel step</li></ul>
+
+<h3>Horror</h3>
+<p>Horror over-performs on co-play &mdash; it is one of the few genres where playing with friends is
+straightforwardly better &mdash; and under-performs badly on D7 and D30, because knowledge destroys fear.
+A player who has seen the entity and learned the map has finished your game without noticing.</p>
+<ul class="checklist"><li>Procedural or semi-procedural layouts so knowledge decays more slowly</li><li>Multiple entities with different behaviours, revealed over time</li><li>Lean hard into invite prompts &mdash; this genre's co-play signal is its competitive advantage</li><li>Instrument which entity or map players quit after, as a custom field on a session-end event</li></ul>
+
+<h3>RPG and progression-heavy games</h3>
+<p>The best retention profile in the data and the worst onboarding problem. RPGs front-load character
+creation, class choice, tutorials and systems explanation &mdash; all before anything fun happens. That is
+directly at odds with the second-highest-weighted ranking signal.</p>
+<ul class="checklist"><li>Put combat before character creation. Let them play, then choose</li><li>Defer systems explanation until the system is relevant</li><li>Instrument the onboarding funnel densely &mdash; RPGs have more steps to lose people at</li><li>Your D7 and D30 strength means you can afford to be aggressive about cutting the first session</li></ul>
+
+<h3>PvP, fighting and battlegrounds</h3>
+<p>Strong on play days, qualified sessions and co-play; weak on new-player bounce, because a new player's
+first match is usually against someone who has played for months. The genre's retention problem is a
+matchmaking problem.</p>
+<ul class="checklist"><li>Protect new players for their first several matches &mdash; separate queue, bot fill, or handicap</li><li>Guarantee an early win. The first session must contain one</li><li>Watch the D1 window specifically on play days and playtime; the drop-off is concentrated there</li><li>Check queue times by region &mdash; a long wait reads as a bounce</li></ul>
+
+<h3>Social, roleplay and hangout</h3>
+<p>Excellent on co-play days and D30, and structurally weak on monetization frequency, because the only
+natural purchases are cosmetic and durable. That means spend days &mdash; a second-tier signal &mdash; tends
+to sit near zero.</p>
+<ul class="checklist"><li>Give players a loop, not just a space. Something to do together beats somewhere to be together</li><li>Cheap, frequently-rotating cosmetics generate spend days that a permanent pass cannot</li><li>Private servers are a natural fit and feed co-play signal directly</li><li>Watch session length carefully: idle time in a social space inflates it without adding value</li></ul>
+
+<h2><span class="sec">03</span>Niche and under-served genres</h2>
+
+<p>The obvious argument for a crowded genre is that the audience is proven. The counter-argument now has
+platform support behind it.</p>
+
+<div class="cards"><a class="card" href="discovery.html#suppress"><p class="ct">Non-uniqueness is an explicit penalty</p><p class="cd">Games whose metadata and place files closely resemble existing games are no longer prioritised for recommendations and rank lower in search. Cloning a trending title has moved from a shortcut to a cost.</p></a><div class="card"><p class="ct">Standout Games rewards the opposite</p><p class="cd">A hand-curated Home sort specifically for novel mechanics, distinctive visuals, or an under-represented genre. There is no equivalent sort for “well-executed clone”.</p></div><div class="card"><p class="ct">Semantic search closes the discovery gap</p><p class="cd">Search now understands natural-language queries across supported languages. A niche game with accurate, descriptive metadata is findable in a way it was not a few years ago.</p></div></div>
+
+<div class="note"><span class="tag">The honest trade-off</span><p>A niche game has less competition and a smaller addressable audience, which means retrieval is harder but ranking is easier &mdash; a devoted small audience produces strong per-user averages, and per-user averages are exactly what the ranking stage reads. The practical risk is not ranking; it is getting into the candidate pool at all. That is the one problem paid traffic and social pushes genuinely solve.</p></div>
+
+<h2><span class="sec">04</span>Working out your own profile</h2>
+
+<p>Rather than trusting a genre label, derive it. Open the Home Recommendations dashboard and rank your
+eight signals against the similar-games benchmark.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Pattern</th><th>Diagnosis</th><th>Response</th></tr></thead><tbody><tr><td>Strong play through rate, weak everything else</td><td>Your tile is writing cheques the game does not cash</td><td>This is the obby profile regardless of genre. Fix return-visit design</td></tr><tr><td>Weak play through rate, strong everything else</td><td>Under-marketed &mdash; the game is good and the tile is not</td><td>The cheapest fix on this page. Thumbnails, title, icon</td></tr><tr><td>Strong D1, weak D2&ndash;7 and D8&ndash;28</td><td>No progression system worth a week</td><td>Progression pacing, measured by player distribution across levels</td></tr><tr><td>Strong D1 and D2&ndash;7, weak D8&ndash;28</td><td>No endgame</td><td>Social systems and a real content cadence</td></tr><tr><td>Strong engagement, zero co-play</td><td>Solo-shaped game in a social platform</td><td>Invite prompts and friend bonuses &mdash; often the single cheapest signal gain available</td></tr><tr><td>Strong Robux spent, weak spend days</td><td>Whale-dependent monetization</td><td>Add a cheap repeatable purchase. Same revenue, more signal, less risk</td></tr></tbody></table></div>
+
+<div class="note win"><span class="tag">The transferable version of this page</span><p>Genres are a shortcut for a question you can answer directly: <em>which of the eight signals does my game's shape make easy, and which does it make hard?</em> Write that down once, honestly, and it will tell you what to build for the next six months more reliably than any benchmark table.</p></div>
+<div class="pagenav"><a href="playbook.html"><span>&larr; Previous</span>The growth playbook</a><a href="glossary.html"><span>Next &rarr;</span>Glossary</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

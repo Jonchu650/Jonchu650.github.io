@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The rundown &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="A complete, ranked field manual to Roblox's creator analytics: which of the dozens of metrics actually drive distribution, and how to move each one.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">The rundown</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html" aria-current="page"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 00 &nbsp;&middot;&nbsp; Orientation</p><h1>Eight numbers decide whether anyone sees your game</h1><p class="standfirst">Roblox hands you something like sixty metrics across nine dashboards. Exactly eight of them feed the recommendation algorithm, and they are only counted for players who found you organically. This manual works outward from those eight.</p></header>
+
+<p class="lede">Everything else on the Creator Hub is diagnostic: it exists to tell you <em>why</em>
+one of the eight moved. That distinction is the whole game. Chase the eight; use the rest to explain them.</p>
+
+<div class="note key"><span class="tag">Read this first</span><p>The eight signals below are measured <strong>only on users who organically joined from the Recommended for You sort on Home.</strong> Engagement, retention and spend from ads, search, charts, friends, teleports or a TikTok link do not count toward ranking. You can buy players. You cannot buy the signal.</p></div>
+
+<h2><span class="sec">01</span>The signal ladder</h2>
+
+<p>This is Roblox's own published priority order for the <strong>Recommended for You</strong> sort &mdash;
+the sort that supplies most of the traffic on the platform. It runs in two stages: <em>retrieval</em>
+picks a candidate set of games you might like, then <em>ranking</em> orders them. Almost everything you
+control lives in the ranking stage.</p>
+
+<div class="ladder"><div class="ladder-tier t1"><div class="tier-name">Most<br>important</div><div><div class="rung"><div class="idx">01</div><div class="body"><h4>Play through rate</h4><p>Share of users who play your game after seeing it in the Recommended&nbsp;for&nbsp;You sort. The one signal with no time window &mdash; it is decided in the half-second someone looks at your tile.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span class="seg">no time segments</span></div></div><div class="rung negative"><div class="idx">02</div><div class="body"><h4>First play bounce rate</h4><p>Share of users who leave after a short first session. Measured in two buckets and counted <em>against</em> you.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span class="seg">&lt;60s &nbsp;&middot;&nbsp; 61&ndash;180s</span></div></div><div class="rung"><div class="idx">03</div><div class="body"><h4>Play days per user</h4><p>Average number of unique days a user comes back. The purest expression of &ldquo;did they form a habit.&rdquo;</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div><div class="rung"><div class="idx">04</div><div class="body"><h4>Playtime per user</h4><p>Average time a user spends in your game. Capped at 60 minutes per user, per game, per day &mdash; so whales cannot carry you.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div></div></div><div class="ladder-tier "><div class="tier-name">Important</div><div><div class="rung"><div class="idx">05</div><div class="body"><h4>Intentional co-play days per user</h4><p>Unique days users come back to play <em>with friends</em> &mdash; through joins, invites or private servers.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div><div class="rung"><div class="idx">06</div><div class="body"><h4>Qualified play sessions per user</h4><p>Average number of meaningful sessions per user, with accidental clicks and instant bounces filtered out.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div><div class="rung"><div class="idx">07</div><div class="body"><h4>Spend days per user</h4><p>Unique days on which users spend Robux. Note it counts <em>days</em>, not amount &mdash; frequency beats size.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div><div class="rung"><div class="idx">08</div><div class="body"><h4>Robux spent per user</h4><p>Average Robux spent per user. The only signal on this list that is purely about money.</p></div><div class="weight"><div class="wbar"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></div><span class="seg">D1 &middot; D2&ndash;7 &middot; D8&ndash;28</span></div></div></div></div></div>
+
+<figcaption style="font-family:var(--f-mono);font-size:11px;color:var(--ink-3);line-height:1.6;margin:11px 0 26px">
+Pips show Roblox's two published influence tiers, not per-signal weights &mdash; Roblox states the signals
+&ldquo;each carry a different amount of influence&rdquo; but does not publish how much. Treat the order within
+a tier as approximate and the gap <em>between</em> tiers as real.
+Source: <a href="sources.html">Roblox, <em>Discovery</em></a>.
+</figcaption>
+
+<div class="note"><span class="tag">How to read the time segments</span><p>Six of the eight signals are measured separately across <strong>D1</strong>, <strong>D2&ndash;7</strong> and <strong>D8&ndash;28</strong> windows. That means a game can look healthy on day one and still lose distribution because its D8&ndash;28 numbers decayed. When impressions drop, check all three windows before you touch anything &mdash; the window that moved tells you whether your problem is onboarding, progression, or endgame.</p></div>
+
+<h2><span class="sec">02</span>Three things that follow from the ladder</h2>
+
+<h3>Averages, not totals</h3>
+<p>Every signal is a per-user average. A game with 400 devoted players can out-rank a game with 40,000
+bored ones. Roblox states this explicitly to reassure small creators, but the sharper implication is the
+inverse: <strong>a flood of low-intent players actively drags your ranking down.</strong> Dumping cheap
+traffic into a game that is not ready is not neutral &mdash; it is negative.</p>
+
+<h3>Retention is weighted three separate ways</h3>
+<p>Play days per user, playtime per user, and qualified sessions per user are three different questions
+about the same behaviour: <em>came back</em>, <em>stayed</em>, and <em>meant it</em>. Together they outweigh
+everything monetary on the list. Roblox has said its explicit direction of travel is a system that
+&ldquo;promotes games with strong long term retention.&rdquo;</p>
+
+<h3>Money is on the list, but it is the quiet half</h3>
+<p>Spend days and Robux spent per user sit in the second tier. Note the ordering: <em>spend days</em> is
+listed before <em>Robux spent</em>. A game where lots of players buy something small on many days is
+reading better than one where a handful of whales buy something huge once.</p>
+
+<h2><span class="sec">03</span>The loop Roblox tells you to run</h2>
+
+<p>Roblox publishes a three-step growth sequence, and the order is not decoration &mdash; running it out of
+order is the single most common way creators waste money.</p>
+
+<div class="cards"><a class="card" href="playbook.html"><span class="cn">Step 1</span><p class="ct">Fix the game first</p><p class="cd">Get D1 retention and average session time to or above your similar-game benchmark. Then payer conversion and ARPPU. Nothing else matters until this is true.</p></a><a class="card" href="acquisition.html"><span class="cn">Step 2</span><p class="ct">Then drive acquisition</p><p class="cd">Only once retention holds. Use the Acquisition dashboard to find which sources convert and which ones bring players who stay.</p></a><a class="card" href="diagnostics.html"><span class="cn">Step 3</span><p class="ct">Then measure every update</p><p class="cd">After each release, check D1 and D7 retention, session time, payer conversion, ARPPU, revenue, new users and play through rate.</p></a></div>
+
+<div class="note trap"><span class="tag">The expensive mistake</span><p>Running step 2 before step 1. Ads and influencer pushes send players into a leaky game; they bounce; your bounce rate and per-user averages get worse; the algorithm demotes you. You pay money to reduce your own organic distribution. Roblox's docs say to sequence it this way; the ranking mechanics explain why.</p></div>
+
+<h2><span class="sec">04</span>The arithmetic underneath all of it</h2>
+
+<p>Two identities do most of the explanatory work. Learn to decompose any change into these terms and
+you will almost always find the cause.</p>
+
+<h4>Revenue</h4>
+<pre><code>Revenue  =  DAU  &times;  ARPDAU
+         =  DAU  &times;  payer conversion  &times;  ARPPU</code></pre>
+<p>Revenue only ever moves for one of three reasons: fewer people, a smaller share of them buying,
+or buyers spending less. Check which one <em>before</em> you redesign the shop.</p>
+
+<h4>Audience size</h4>
+<pre><code>DAU  &asymp;  average CCU  &times;  1440  &divide;  average daily minutes per user</code></pre>
+<p>A game averaging 5,000 concurrent players with 30 minutes of daily playtime per user is serving roughly
+240,000 DAU. Use <em>average</em> CCU, not peak &mdash; peak typically runs well above average. This is the
+identity to use when you want to sanity-check a revenue-per-CCU rule of thumb you read somewhere,
+rather than trusting the rule of thumb.</p>
+
+<div class="kpis"><div class="kpi"><span class="k alt">60&nbsp;min</span><span class="l">Daily playtime cap per user in the ranking signal</span></div><div class="kpi"><span class="k">10&nbsp;min</span><span class="l">Session length needed to earn a Creator Rewards payout</span></div><div class="kpi"><span class="k">+8.5%</span><span class="l">Average qualified play through rate lift from thumbnail personalisation</span></div><div class="kpi"><span class="k">~50%</span><span class="l">Share of revenue from the top 15% of active payers, on average</span></div></div>
+
+<h2><span class="sec">05</span>How this manual is organised</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Part</th><th>What it covers</th><th>Use it when</th></tr></thead><tbody><tr><td><a href='discovery.html'>The algorithm</a></td><td>Retrieval and ranking in full, the eight signals in depth, what suppresses exposure</td><td>You want to understand the machine</td></tr><tr><td><a href='tiers.html'>What actually matters</a></td><td>Every metric Roblox exposes, sorted into four tiers by real leverage</td><td>You are deciding what to work on</td></tr><tr><td>Metrics, &sect;03&ndash;08</td><td>Engagement, retention, acquisition, monetization, performance, audience &mdash; one page each</td><td>You need the definition, the target, and the levers</td></tr><tr><td><a href='instrumentation.html'>Instrumentation</a></td><td>AnalyticsService: funnels, economy events, custom events, custom fields, limits, working Luau</td><td>You are adding tracking to your game</td></tr><tr><td><a href='experiments.html'>Experiments &amp; configs</a></td><td>A/B testing properly: MDE, significance, and why small games struggle</td><td>You want to prove a change worked</td></tr><tr><td><a href='benchmarks.html'>Benchmarks</a></td><td>Real numbers, with sources and an honest account of how much to trust each one</td><td>You are asking &ldquo;is this good?&rdquo;</td></tr><tr><td><a href='diagnostics.html'>Diagnostics</a></td><td>Decision trees for the six failures that account for most sudden drops</td><td>Something broke and you need to find it</td></tr><tr><td><a href='playbook.html'>Playbook</a> &amp; <a href='genres.html'>genres</a></td><td>The phase-by-phase plan, and how priorities shift across simulator, obby, horror, RPG, PvP and the rest</td><td>You are planning the next eight weeks</td></tr></tbody></table></div>
+
+<div class="note"><span class="tag">Scope and honesty</span><p>Everything stated as fact here comes from Roblox's official creator documentation as of September 2026, and is cited on the <a href='sources.html'>Sources</a> page. Where a number comes from a third party, or where the community believes something Roblox has not confirmed, this manual says so in the same sentence. Roblox changes the signals and their influence over time &mdash; re-check <a href='discovery.html'>the algorithm page</a> against the live docs every few months.</p></div>
+<div class="pagenav"><a href="discovery.html"><span>Next &rarr;</span>The algorithm</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

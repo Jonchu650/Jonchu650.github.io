@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiments & configs &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="Roblox Experiments and Configs: running honest A/B tests, reading minimum detectable effect, and why small games struggle to reach significance.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">Experiments & configs</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html" aria-current="page"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 10 &nbsp;&middot;&nbsp; Practice</p><h1>Experiments &amp; configs</h1><p class="standfirst">The difference between &ldquo;the number went up after I shipped it&rdquo; and &ldquo;shipping it made the number go up.&rdquo; Also the tool most likely to mislead you if you use it impatiently.</p></header>
+
+<h2><span class="sec">01</span>What the two tools do</h2>
+
+<div class="cards"><div class="card"><p class="ct">Configs</p><p class="cd">Adjust values in your live game without publishing a new version. Tune progression rates, rewards, prices and gameplay parameters while servers are running.</p></div><div class="card"><p class="ct">Experiments</p><p class="cd">A/B test alternative values of a config against a control, and measure the causal impact on your real metrics with confidence intervals.</p></div></div>
+
+<p>Together with analytics they form a loop: <strong>analyse</strong> to find an opportunity,
+<strong>change</strong> via a config or experiment, <strong>monitor</strong> the relevant metrics,
+<strong>repeat</strong>. Roblox's own advice is to make incremental changes rather than large ones,
+specifically so you can attribute the result.</p>
+
+<h2><span class="sec">02</span>Setting up an experiment</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Setting</th><th>Constraint</th><th>Recommendation</th></tr></thead><tbody><tr><td><strong>Duration</strong></td><td>14&ndash;60 days</td><td>Run the full planned duration. Always</td></tr><tr><td><strong>Goal metric</strong></td><td>Chosen at creation</td><td>Pick one. A test with three goals has no result</td></tr><tr><td><strong>Variants</strong></td><td>Up to two variants plus one control (config experiments); up to three variants (matchmaking experiments)</td><td>Roblox's own advice: a simple 50/50 one-variant test on a large rollout</td></tr><tr><td><strong>Rollout %</strong></td><td>Your choice</td><td>Bigger is better. Excluded users receive the control and do not affect results</td></tr><tr><td><strong>Scheduling</strong></td><td>Start now or later</td><td>Once scheduled you cannot change the configuration &mdash; only reschedule</td></tr></tbody></table></div>
+
+<div class="note"><span class="tag">How rollout percentages actually work</span><p>If you roll out to 40% of users with two variants split 50/50, then 60% of your players are excluded entirely (they get the control and are not counted), roughly 20% get the control as part of the experiment, and roughly 20% get the variant. It is easy to design a test that only measures a fifth of your audience and then wonder why nothing is significant.</p></div>
+
+<h3>Metrics every experiment tracks</h3>
+<p>Regardless of your goal metric, experiments report on all of these across the run &mdash; which is what
+makes them good at catching trade-offs you did not anticipate:</p>
+<ul>
+<li><strong>Playtime</strong> &mdash; average time spent, cumulative over the experiment</li>
+<li><strong>Session time</strong> &mdash; playtime divided by sessions, cumulative</li>
+<li><strong>ARPU</strong> &mdash; revenue divided by players, cumulative</li>
+<li><strong>ARPPU</strong> &mdash; revenue divided by paying players, cumulative</li>
+<li>Plus retention metrics reported with confidence intervals</li>
+</ul>
+
+<h2><span class="sec">03</span>Minimum detectable effect</h2>
+
+<div class="placard"><div class="placard-top"><h3>MDE</h3><div><span class="chip rank">Check this before you start</span></div></div><p class="def">The smallest change in your goal metric the experiment can reliably detect, given your sample size.</p><dl><dt>Calculated from</dt><dd>Goal metric, DAU, rollout percentage, duration, and variant splits</dd><dt>Red flag</dt><dd>An MDE above roughly 100% means significance is effectively unreachable</dd><dt>Hard threshold</dt><dd>Roblox states games under <strong>1,000 DAU</strong> might struggle to get useful data</dd><dt>Fix</dt><dd>Larger rollout, longer duration, fewer variants &mdash; or accept that this change is not testable yet</dd></dl></div>
+
+<div class="note trap"><span class="tag">If you have fewer than 1,000 DAU</span><p>Experiments will mostly not work for you, and pretending otherwise is worse than not testing. Use configs to make changes quickly and reversibly, and evaluate them with <strong>before/after cohort comparison</strong> instead &mdash; ship on a known date, then compare the cohorts who first played in the week before and the week after on the retention dashboard.</p><p>It is weaker evidence. It is not no evidence. The discipline that matters is changing one thing at a time and writing down the date.</p></div>
+
+<h2><span class="sec">04</span>Adding experiments to your code</h2>
+
+<pre><code data-lang="lua"><span class="cm">-- Read an experiment value for a specific player.</span>
+<span class="cm">-- The FIRST GetValue call enrolls that player for that key; every</span>
+<span class="cm">-- later call returns the same variant for the experiment's duration.</span>
+
+<span class="kw">local</span> snapshot = <span class="cm">--[[ player-specific ConfigSnapshot ]]</span>
+<span class="kw">local</span> bossHealth = snapshot:GetValue(<span class="st">"bossHealth"</span>)</code></pre>
+
+<p>The enrollment rule is worth reading twice: <strong>the first <code>GetValue()</code> call on a
+player-specific snapshot enrolls that player for that key, and only that key.</strong> Every subsequent
+call returns the same value for the duration of the experiment. Only the first call is random.</p>
+
+<p>The practical consequence: <em>where</em> you call <code>GetValue()</code> determines <em>who</em> is in
+your experiment. If you only read the config inside a shop UI, you have enrolled only players who opened
+the shop, and your result describes shoppers rather than players. Call it at a point every relevant
+player reaches.</p>
+
+<h3>Targeted experiments</h3>
+<p>You can restrict an experiment to an audience segment. Two things to know:</p>
+<ul>
+<li><strong>Narrowing reduces sample size, so MDE rises.</strong> Roblox recalculates it using an estimate
+of the matching audience &mdash; watch that number before committing.</li>
+<li><strong>Enrolment is evaluated per session, but attribution is sticky.</strong> A player who matches
+your criteria mid-session can be enrolled; once enrolled, their data stays attributed to that variant even
+if they stop matching. D7 retention still counts a player who enrolled on day 0 and returned on day 7,
+even if they no longer qualify by day 4.</li>
+</ul>
+
+<h2><span class="sec">05</span>Reading the results</h2>
+
+<div class="table-scroll"><table><thead><tr><th>Signal</th><th>Meaning</th><th>Action</th></tr></thead><tbody><tr><td>Confidence interval excludes 0%</td><td>Statistically significant</td><td>This is a real effect. Consider the trade-offs, then decide</td></tr><tr><td>Confidence interval includes 0%</td><td>Not significant</td><td>Ignore it. Even a large-looking change</td></tr><tr><td>Confidence interval very wide</td><td>Sample too small</td><td>The metric may never reach significance at this scale</td></tr><tr><td>One metric up, another down</td><td>A genuine trade-off</td><td>Decide whether it is worth it. No tool can answer this for you</td></tr></tbody><caption>Roblox's worked example: D1 retention up 17.4% with bounds of 8.02% and 22.03% — significant, because the interval does not cross zero.</caption></table></div>
+
+<h3>The four discipline rules</h3>
+<ul class="checklist"><li><strong>Let it run the full duration.</strong> The novelty effect &mdash; temporary interest because something is new, not because it is better &mdash; heavily skews early results and can push them in and out of significance. Ending early is how you act on noise.</li><li><strong>Do not act without significance.</strong> Large-looking changes are frequently not significant. If it is not significant, it did not happen.</li><li><strong>Do not read the results page early</strong> except to confirm the experiment is running correctly. Roblox says this explicitly.</li><li><strong>Balance against qualitative signal.</strong> Statistical significance deals in probabilities, not certainties. Weigh results against player feedback and your own vision for the game.</li></ul>
+
+<h2><span class="sec">06</span>Making the decision</h2>
+
+<p>When an experiment finishes, <strong>Make decision</strong> starts a guided rollout. Roblox shows any
+warnings about significance and duration, then asks you to pick a winning variant or keep the control.
+The chosen value is rolled out to your permanent configs; you can click <strong>Change winner</strong> if
+you reconsider.</p>
+
+<p>For an untargeted variant, the value becomes the config's new default and other conditions on that key
+are removed. For a targeted variant, Roblox integrates the winning rule back into your permanent config
+&mdash; overwriting an identical top condition if one exists, or adding a matching global condition.</p>
+
+<h2><span class="sec">07</span>What to test, in order</h2>
+
+<p>Given limited traffic and a 14-day minimum, you get a small number of tests per quarter. Spend them on
+changes where you genuinely cannot predict the answer and where the metric moved is high-tier.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Test</th><th>Goal metric</th><th>Why it is worth a slot</th></tr></thead><tbody><tr><td>Tutorial length &mdash; short vs. thorough</td><td>D1 retention</td><td>The classic trade-off. Genuinely unpredictable, and it moves the highest-tier signal</td></tr><tr><td>Starter grant size</td><td>D1 retention, session time</td><td>Too little and the loop is unreachable; too much and progression loses meaning</td></tr><tr><td>First-purchase discount</td><td>Payer conversion</td><td>Directly targets the conversion metric Roblox says to fix second</td></tr><tr><td>Progression pacing at the first gate</td><td>D7 retention</td><td>The most common cause of weak D7, and very hard to eyeball</td></tr><tr><td>Daily reward value</td><td>Play days per user</td><td>Feeds a top-tier ranking signal directly</td></tr><tr><td>Shop entry point placement</td><td>Payer conversion</td><td>Cheap to test, often surprisingly large</td></tr></tbody></table></div>
+
+<div class="note win"><span class="tag">Things not to spend an experiment on</span><p>Anything where you already know the answer, anything cosmetic, and anything whose effect is smaller than your MDE. Also: thumbnails. Thumbnail personalisation already runs a continuous multi-armed test for you on the surface that matters &mdash; do not duplicate it.</p></div>
+<div class="pagenav"><a href="instrumentation.html"><span>&larr; Previous</span>Instrumentation</a><a href="benchmarks.html"><span>Next &rarr;</span>Benchmarks</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The growth playbook &middot; Roblox Analytics Field Manual</title>
+<meta name="description" content="A phase-by-phase plan for a Roblox game from pre-launch to scale: what to build, what to watch, and what to ignore at each stage.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%232B4ACB%22/><rect x=%2220%22 y=%2258%22 width=%2214%22 height=%2224%22 fill=%22white%22/><rect x=%2243%22 y=%2240%22 width=%2214%22 height=%2242%22 fill=%22white%22/><rect x=%2266%22 y=%2218%22 width=%2214%22 height=%2264%22 fill=%22white%22/></svg>">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="navbar">
+  <button type="button" id="navtoggle" aria-expanded="false" aria-controls="nav">Contents</button>
+  <span class="navbar-title">The growth playbook</span>
+</div>
+<button class="scrim" id="scrim" tabindex="-1" aria-hidden="true"></button>
+<div class="shell">
+<nav class="nav" id="nav" aria-label="Manual contents"><a class="brand" href="index.html"><span class="brand-mark">Field manual &middot; rev. 2026.09</span><span class="brand-name">Roblox<br>Analytics</span></a><div class="nav-group"><div class="nav-label">Start</div><a href="index.html"><span class="num">00</span><span>The rundown</span></a><a href="discovery.html"><span class="num">01</span><span>The algorithm</span></a><a href="tiers.html"><span class="num">02</span><span>What actually matters</span></a></div><div class="nav-group"><div class="nav-label">Metrics</div><a href="engagement.html"><span class="num">03</span><span>Engagement</span></a><a href="retention.html"><span class="num">04</span><span>Retention</span></a><a href="acquisition.html"><span class="num">05</span><span>Acquisition</span></a><a href="monetization.html"><span class="num">06</span><span>Monetization</span></a><a href="performance.html"><span class="num">07</span><span>Performance</span></a><a href="audience.html"><span class="num">08</span><span>Audience & feedback</span></a></div><div class="nav-group"><div class="nav-label">Practice</div><a href="instrumentation.html"><span class="num">09</span><span>Instrumentation</span></a><a href="experiments.html"><span class="num">10</span><span>Experiments & configs</span></a><a href="benchmarks.html"><span class="num">11</span><span>Benchmarks</span></a><a href="diagnostics.html"><span class="num">12</span><span>Diagnostics</span></a></div><div class="nav-group"><div class="nav-label">Playbooks</div><a href="playbook.html" aria-current="page"><span class="num">13</span><span>The growth playbook</span></a><a href="genres.html"><span class="num">14</span><span>Priorities by genre</span></a></div><div class="nav-group"><div class="nav-label">Reference</div><a href="glossary.html"><span class="num">15</span><span>Glossary</span></a><a href="sources.html"><span class="num">16</span><span>Sources</span></a></div><div class="nav-foot">Built from Roblox&rsquo;s official creator documentation, September&nbsp;2026.<br>Every claim is traceable &mdash; see <a href="sources.html">Sources</a>.</div></nav>
+<main class="main" id="main">
+<header class="page-head"><p class="eyebrow">&sect; 13 &nbsp;&middot;&nbsp; Playbook</p><h1>The growth playbook</h1><p class="standfirst">What to do, in order, from before launch to past a thousand daily players. Each phase has a different bottleneck and a different set of numbers that are even visible to you.</p></header>
+
+<div class="note key"><span class="tag">The organising principle</span><p>Roblox's published sequence is: fix retention and engagement, then monetization, then acquisition, then measure every update. The reason it is an order and not a list is that the ranking signals are per-user averages &mdash; so acquiring players into a game that does not hold them actively lowers your organic distribution. Every phase below is a version of &ldquo;do not skip ahead.&rdquo;</p></div>
+
+<h2><span class="sec">00</span>Pre-launch</h2>
+
+<p><strong>Bottleneck:</strong> you have no data and no benchmarks, and the only analytics surface
+available to you is the one you build yourself.</p>
+
+<h3>Build</h3>
+<ul class="checklist"><li><strong>The day-one instrumentation kit.</strong> Onboarding funnel, shop funnel, economy events, a progression event, a core-loop event, and a session-length event. See <a href='instrumentation.html#kit'>Instrumentation</a>.</li><li><strong>Reserve custom field 1 for your content variant</strong> &mdash; map, class, pet type, whatever your game varies. Every chart becomes splittable by it for free.</li><li><strong>2&ndash;5 thumbnails, all activated.</strong> Personalisation does not run below two. This is the cheapest play-through-rate gain available and it requires no code.</li><li><strong>A title that states the loop.</strong> The best-performing Roblox titles function as the pitch and the tutorial at once.</li><li><strong>Verified email and 2-step verification on the account.</strong> Required for the analytics dashboard and for sales data downloads.</li></ul>
+
+<h3>Test</h3>
+<ul class="checklist"><li><strong>Play it on a cheap Android phone.</strong> Not an emulator. Roughly a plurality of your players will use both mobile and PC, and mobile is where bounce rates are made.</li><li><strong>Time yourself from join to first genuine payoff.</strong> If it is over five minutes, cut something.</li><li><strong>Check nothing heavy runs on <code>PlayerAdded</code>.</strong> The first 60 seconds belong to asset loading.</li><li><strong>Verify events actually fire.</strong> They only work from the server, in a published game &mdash; never from Studio. Publish to a test place and confirm data arrives within 24 hours.</li></ul>
+
+<div class="note trap"><span class="tag">The most expensive pre-launch mistake</span><p>Lining up a launch-day marketing push before the game holds anyone. Paid and social traffic does not feed the ranking stage, and it will drag your per-user averages down while it runs. Spend launch traffic <em>after</em> you know your D1 is respectable, not before.</p></div>
+
+<h2><span class="sec">01</span>Launch week &mdash; days 1 to 7</h2>
+
+<p><strong>Bottleneck:</strong> almost everything is noise. Your dashboard needs more than 10 DAU and 10
+play hours for 7 consecutive days before full KPIs unlock, and benchmarks need 100 DAU.</p>
+
+<div class="table-scroll"><table><thead><tr><th>Watch</th><th>Why</th><th>Ignore</th></tr></thead><tbody><tr><td><strong>Crash rate and OOM exits</strong></td><td>The only genuinely urgent thing. A crash on a device class you did not test can silently cap your ceiling</td><td>Revenue</td></tr><tr><td><strong>The onboarding funnel</strong></td><td>Available with no DAU threshold, and it is where your biggest early win lives</td><td>D7 and D30 &mdash; the data does not exist yet</td></tr><tr><td><strong>Feedback comments</strong></td><td>Small-n but specific. Early comments are the highest signal-to-noise feedback you will ever get</td><td>Benchmarks &mdash; you do not have them</td></tr><tr><td><strong>Session length distribution</strong></td><td>From your own custom event. Look at the bottom quartile</td><td>Day-to-day DAU wobble</td></tr></tbody></table></div>
+
+<h3>The one thing to do this week</h3>
+<p>Find your largest onboarding funnel drop-off and fix it. In Roblox's own reference example the drop
+between step 1 and step 2 was <strong>70%</strong>, and the fix was contextual prompts telling players what
+to do. This is almost always the highest-return change available in week one, and it costs an afternoon.</p>
+
+<h2><span class="sec">02</span>Days 8 to 30 &mdash; first real diagnosis</h2>
+
+<p><strong>Bottleneck:</strong> you now have D1 and D7 data and, if you crossed 100 DAU, benchmarks and
+insights. This is where you find out what kind of problem you have.</p>
+
+<div class="tierlist"><div class="tierrow a"><div class="tierbadge">If D1 is weak<span>below your benchmark's 50th percentile</span></div><div class="tierbody"><p>Your core loop or first-time user experience is the problem. Cut the tutorial, move the payoff earlier, give starter items and currency so the loop is reachable immediately, and check performance on low-end devices. Re-check the funnel after each change.</p></div></div><div class="tierrow b"><div class="tierbadge">If D1 is fine but D7 is weak<span>players come back once, then stop</span></div><div class="tierbody"><p>Your progression system is the problem. Players had a good first session and could not picture a second week. Measure the distribution of players across progression levels; if everyone is stalled at the same gate, that gate is too expensive.</p></div></div><div class="tierrow c"><div class="tierbadge">If retention is fine but nothing grows<span>signals healthy, impressions flat</span></div><div class="tierbody"><p>Play through rate or reach. Review thumbnails, title and icon; confirm personalisation is running; check for a content-quality banner. This is also the point where a modest, targeted acquisition push becomes reasonable &mdash; because now the game holds people.</p></div></div><div class="tierrow d"><div class="tierbadge">If everything is weak<span>no signal is near benchmark</span></div><div class="tierbody"><p>Do not optimise. The game is not working, and analytics cannot fix a game nobody wants. This is a product decision, not a metrics decision &mdash; see the last section of this page.</p></div></div></div>
+
+<h2><span class="sec">03</span>100 to 1,000 DAU &mdash; the optimisation loop</h2>
+
+<p><strong>Bottleneck:</strong> you have benchmarks and insights but not experiments. You are optimising by
+cohort comparison, one change at a time.</p>
+
+<h3>The weekly rhythm</h3>
+<div class="table-scroll"><table><thead><tr><th>When</th><th>Do</th></tr></thead><tbody><tr><td><strong>Monday</strong></td><td>Read the Home Recommendation signals across D1, D2&ndash;7 and D8&ndash;28. Identify the signal furthest below benchmark</td></tr><tr><td><strong>Midweek</strong></td><td>Ship one change targeting that signal. Write down the date</td></tr><tr><td><strong>Following Monday</strong></td><td>Compare the cohort that first played after the change against the one before, on the retention dashboard</td></tr><tr><td><strong>Every 2&ndash;4 weeks</strong></td><td>A small content update. Test new thumbnails with it</td></tr><tr><td><strong>Every 2&ndash;3 months</strong></td><td>A larger feature update</td></tr></tbody><caption>Roblox's published update cadence. The discipline that makes it work is changing one thing at a time and recording the date, so cohort comparison stays interpretable.</caption></table></div>
+
+<h3>The order to attack signals</h3>
+<div class="cards"><a class="card" href="engagement.html"><span class="cn">First</span><p class="ct">First play bounce rate</p><p class="cd">Highest weight among things you can move quickly. Split by the under-60s and 61–180s buckets — technical versus creative.</p></a><a class="card" href="engagement.html"><span class="cn">Second</span><p class="ct">Median session length past 10 minutes</p><p class="cd">Directly monetised through Creator Rewards, sits at the platform median, and the work also improves bounce rate and qualified sessions.</p></a><a class="card" href="engagement.html"><span class="cn">Third</span><p class="ct">Play days per user</p><p class="cd">A return hook: daily reward, offline progression, or logging out mid-goal. Cheap to build, feeds a top-tier signal.</p></a><a class="card" href="discovery.html#signals"><span class="cn">Fourth</span><p class="ct">Intentional co-play days</p><p class="cd">Invite prompts, friend bonuses, shared objectives, private servers. The most under-exploited signal for solo developers because it is UI work, not content work.</p></a><a class="card" href="monetization.html"><span class="cn">Fifth</span><p class="ct">Spend days per user</p><p class="cd">A cheap, repeatable, frequently-refreshed purchase. Ten 80-Robux buys across ten days beat one 1,000-Robux gamepass for signal purposes.</p></a><a class="card" href="monetization.html"><span class="cn">Sixth</span><p class="ct">Payer conversion depth</p><p class="cd">Only once the base is wide. High ARPPU with low ARPDAU means you are living on a narrow slice of players.</p></a></div>
+
+<h2><span class="sec">04</span>1,000+ DAU &mdash; test instead of guess</h2>
+
+<p><strong>Bottleneck:</strong> you can now reach statistical significance, and the cost of a wrong decision
+has risen enough to justify the wait.</p>
+
+<ul class="checklist"><li><strong>Switch from cohort comparison to experiments.</strong> Check the MDE before committing &mdash; if it is above roughly 100%, the test cannot succeed at your scale.</li><li><strong>Use configs for anything you might want to revert</strong> without publishing: progression rates, reward values, prices.</li><li><strong>Read the weekly and monthly AI reports.</strong> The automatic outlier detection is the genuinely useful part &mdash; it finds segment-specific regressions you would only catch by filtering twenty combinations by hand.</li><li><strong>Now paid acquisition makes sense.</strong> The game holds people, so bought traffic converts to revenue and to retrieval-stage consideration. Judge campaigns on a 30-day window and check the Recent and Resurrected user views, not just All Users.</li><li><strong>Make one share link per channel and per creator</strong> so you can compare D7 retention and 30-day revenue per user across sources rather than guessing.</li></ul>
+
+<h2><span class="sec">05</span>A worked example</h2>
+
+<p>Take a simulator-style game where players collect rare objects, bring them back to a base, and the
+collection generates passive income &mdash; the shape of a lot of the genre right now, including
+<em>Hatch a Meteor</em>. Mapping the ladder onto it:</p>
+
+<div class="table-scroll"><table><thead><tr><th>Signal</th><th>What it looks like in this genre</th><th>Concrete lever</th></tr></thead><tbody><tr><td>Play through rate</td><td>The tile has to sell the loop in one image</td><td>Thumbnail showing the collection, not the environment. Title stating the verb and the object</td></tr><tr><td>First play bounce rate</td><td>Players who join and cannot tell what to do</td><td>Give the first collectible free within 30 seconds. Do not make the first one a challenge</td></tr><tr><td>Play days per user</td><td>Passive income is already a return hook &mdash; use it deliberately</td><td>Cap offline accumulation at roughly a day so there is a reason to come back tomorrow specifically</td></tr><tr><td>Playtime per user</td><td>Sessions end when there is nothing to chase</td><td>Always have a visible next-rarity target. Telegraph incoming opportunities</td></tr><tr><td>Intentional co-play days</td><td>Bases are inherently visitable</td><td>Let players see friends' collections, and reward visiting. This is nearly free signal</td></tr><tr><td>Spend days per user</td><td>Genre usually over-relies on expensive permanent passes</td><td>Add a cheap consumable that refreshes daily &mdash; a re-roll, a luck boost, an extra slot</td></tr><tr><td>Robux spent per user</td><td>Driven by collection pressure</td><td>Price ladder from very cheap to aspirational, not one tier</td></tr></tbody></table></div>
+
+<p>The generalisable point is not the genre. It is that every ranking signal has a design expression, and
+you can write this table for any game in about twenty minutes. Doing so converts an abstract algorithm
+into a feature list.</p>
+
+<h2><span class="sec">06</span>When to stop</h2>
+
+<p>An honest section, because the analytics are also how you decide to move on.</p>
+
+<div class="kpis"><div class="kpi"><span class="k alt">30 days</span><span class="l">Enough data for D1, D7 and a first D30 read</span></div><div class="kpi"><span class="k">&lt;50th</span><span class="l">Percentile on every signal, after fixes, is the stop signal</span></div><div class="kpi"><span class="k">2&ndash;3</span><span class="l">Real attempts at the weakest signal before concluding</span></div></div>
+
+<p>If, after 30 days and two or three genuine attempts at your weakest signal, you are below the 50th
+percentile on <em>every</em> ranking signal and the trend is flat &mdash; the problem is the game concept, not
+the execution. Analytics can tell you a game is not working. It cannot tell you what game to make
+instead.</p>
+
+<p>What carries forward: your instrumentation kit, your thumbnail testing habit, your understanding of
+which signals you are structurally good and bad at, and the code. That is most of the value of a failed
+attempt, and it is why shipping several games is a reasonable strategy and polishing one indefinitely
+often is not.</p>
+
+<div class="note win"><span class="tag">The thing worth internalising</span><p>Every signal in the ladder is a per-user average measured on organic players. That single sentence resolves most strategic questions: it is why cheap traffic hurts, why a 400-player game can out-rank a 40,000-player one, why the 60-minute cap means raising the floor beats raising the ceiling, and why spend <em>frequency</em> is worth designing for even when it is not where your revenue is.</p></div>
+<div class="pagenav"><a href="diagnostics.html"><span>&larr; Previous</span>Diagnostics</a><a href="genres.html"><span>Next &rarr;</span>Priorities by genre</a></div>
+</main>
+</div>
+<button class="themetoggle" id="themetoggle" type="button">Theme</button>
+<script src="assets/app.js"></script>
+</body>
+</html>
