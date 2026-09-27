@@ -15,6 +15,14 @@ themeButton.addEventListener('click',()=>{
   try{localStorage.setItem('portfolio-theme',next)}catch(e){}
   updateThemeLabel();
 });
+// Follow the system appearance until the visitor picks one with the toggle.
+const systemLight=window.matchMedia('(prefers-color-scheme: light)');
+systemLight.addEventListener('change',()=>{
+  let saved=null;try{saved=localStorage.getItem('portfolio-theme')}catch(e){}
+  if(saved)return;
+  document.documentElement.dataset.theme=systemLight.matches?'light':'dark';
+  updateThemeLabel();
+});
 updateThemeLabel();
 const cortana=document.getElementById('cortana');
 const stage=document.getElementById('sphere-stage');
